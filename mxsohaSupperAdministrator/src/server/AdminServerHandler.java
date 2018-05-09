@@ -147,6 +147,25 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 			else if(orderProps.getProperty("delUserInfoByName").equals(order)) {
 				deleteUserInfoByName(context, obj);
 			}
+			//--------------------------------
+			else if(orderProps.getProperty("updateAdminPass").equals(order)) {
+				updateAdminPass(context, obj);
+			}
+			else if(orderProps.getProperty("addTopPromoterByAdmin").equals(order)) {
+				addTopPromoterByAdmin(context, obj);
+			}
+			else if(orderProps.getProperty("selectAllTopPromotersInfo").equals(order)) {
+				selectAllTopPromotersInfo(context, obj);
+			}
+			else if(orderProps.getProperty("deletePromoterByName").equals(order)) {
+				deletePromoterByName(context, obj);
+			}
+			else if(orderProps.getProperty("deleteAllUser").equals(order)) {
+				deleteAllUser(context, obj);
+			}
+			else if(orderProps.getProperty("deleteAllPromoter").equals(order)) {
+				deleteAllPromoter(context, obj);
+			}
 			else{
 				throw new Exception("错误的请求命令:"+order);//如果读取不到以上命令则抛出异常
 			}
@@ -163,6 +182,43 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 		}
 	}
 	
+	private void deleteAllPromoter(ChannelHandlerContext context, JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void deleteAllUser(ChannelHandlerContext context, JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void deletePromoterByName(ChannelHandlerContext context, JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void selectAllTopPromotersInfo(ChannelHandlerContext context, JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void addTopPromoterByAdmin(ChannelHandlerContext context, JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void updateAdminPass(ChannelHandlerContext context, JSONObject obj) {
+		String oldPass = obj.getString("oldPass");
+		String newPass = obj.getString("newPass");
+		int result = service.updateAdminPass(oldPass, newPass);
+		if(result > 0) {
+			obj.put("order", "success");
+		}else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
+	}
+
 	private void deleteUserInfoByName(ChannelHandlerContext context, JSONObject obj) {
 		String name = obj.getString("name");
 		int result = service.deleteUserInfo(0, name);
@@ -671,7 +727,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 		obj.put("order", "success");
 		obj.put("infoSize", infoSize);
 		this.admin = u;
-		service.updateuserIp(u.getUsername(), StringUtils.getIpFromRemoteIp(context.channel().remoteAddress().toString()));
+		service.updateuserIp(u.getName(), StringUtils.getIpFromRemoteIp(context.channel().remoteAddress().toString()));
 		service.addSystemLog("登录系统",0);
 		writeAndFlush(context, obj.toString());
 	}
@@ -688,7 +744,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	 */
 	private void adminlogout() {
 		if(admin != null) {
-			service.logout(admin.getUsername());
+			service.logout(admin.getName());
 			service.addSystemLog("退出系统",0);
 		}
 	}

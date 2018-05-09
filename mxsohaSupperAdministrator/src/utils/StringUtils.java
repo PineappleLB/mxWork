@@ -16,7 +16,7 @@ public class StringUtils {
 	
 	
 	/**
-	 * 密码加密
+	 * 密码加密 password + token
 	 * @param str
 	 * @return
 	 * @throws NoSuchAlgorithmException 

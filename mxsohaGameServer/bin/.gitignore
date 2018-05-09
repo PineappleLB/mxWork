@@ -1,0 +1,12 @@
+/cardJson.json
+/client/
+/config.xml
+/game.properties
+/log4j.properties
+/mapper/
+/model/
+/redis/
+/serial/
+/server/
+/service/
+/utils/

@@ -498,7 +498,7 @@ public class UserServiceImpl implements UserService {
 		session = MyBatisUtil.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
-			return mapper.clearUserInfo() & mapper.clearSeatsInfo();
+			return mapper.clearUserInfo() & mapper.clearSeatsInfo() & mapper.clearUsers();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -511,12 +511,28 @@ public class UserServiceImpl implements UserService {
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
 			if(id > 0) {
-				return mapper.deleteUserInfoTable(id) & mapper.deleteUserTable(id)
-						& mapper.deleteUserBeInvited(id);
+				mapper.deleteUserBeInvited(id);
+				return mapper.deleteUserInfoTable(id) & mapper.deleteUserTable(id);
 			} else if(name != null && !name.equals("")){
 				id = mapper.selectUserIdByName(name);
-				return mapper.deleteUserInfoTable(id) & mapper.deleteUserTable(id)
-						& mapper.deleteUserBeInvited(id);
+				mapper.deleteUserBeInvited(id);
+				return mapper.deleteUserInfoTable(id) & mapper.deleteUserTable(id);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int updateAdminPass(String oldPass, String newPass) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			Admin admin = mapper.selectAdminPass();
+			if(StringUtils.encode(oldPass + admin.getToken()).equals(admin.getPassword())) {
+				admin.setName(StringUtils.encode(newPass + admin.getToken()));
+				return mapper.updateAdminInfo(admin);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

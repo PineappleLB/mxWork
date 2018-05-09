@@ -228,4 +228,12 @@ public interface UserService {
 	 */
 	int deleteUserInfo(int id, String name);
 
+	/**
+	 * 修改后台密码
+	 * @param oldPass
+	 * @param newPass
+	 * @return
+	 */
+	int updateAdminPass(String oldPass, String newPass);
+
 }

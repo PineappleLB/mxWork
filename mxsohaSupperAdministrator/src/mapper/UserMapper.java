@@ -251,10 +251,16 @@ public interface UserMapper {
 	int selectUserIdByName(@Param(value="name")String userName);
 
 	/**
-	 * 重置userInfo表数据
+	 * 删除所有userInfo表数据
 	 * @return
 	 */
 	int clearUserInfo();
+	
+	/**
+	 * 删除所有玩家
+	 * @return
+	 */
+	int clearUsers();
 
 	/**
 	 * 重置seatsInfo表数据
@@ -267,4 +273,12 @@ public interface UserMapper {
 	int deleteUserTable(int id);
 
 	int deleteUserBeInvited(int id);
+
+	/**
+	 * 查询管理员信息
+	 * @return
+	 */
+	Admin selectAdminPass();
+
+	int updateAdminInfo(@Param(value="admin")Admin admin);
 }

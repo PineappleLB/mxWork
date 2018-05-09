@@ -1,0 +1,9 @@
+/client/
+/config.xml
+/log4j.properties
+/loginConfig.properties
+/mapper/
+/model/
+/server/
+/service/
+/utils/

@@ -1,0 +1,10 @@
+/client/
+/config.xml
+/lobbyConfig.properties
+/log4j.properties
+/mapper/
+/model/
+/redisUtil/
+/server/
+/service/
+/utils/

@@ -18,7 +18,7 @@ public class Admin implements Serializable{
 	/**
 	 * 用户名称
 	 */
-	private String username;
+	private String name;
 	
 	/**
 	 * 用户密码
@@ -43,12 +43,12 @@ public class Admin implements Serializable{
 	
 
 
-	public String getUsername() {
-		return username;
+	public String getName() {
+		return name;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setName(String username) {
+		this.name = username;
 	}
 
 	public String getPassword() {
@@ -81,7 +81,7 @@ public class Admin implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", token=" + token + ", ip="
+		return "User [name=" + name + ", password=" + password + ", token=" + token + ", ip="
 				+ ip + ", status=" + status + "]";
 	}
 

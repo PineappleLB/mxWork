@@ -145,11 +145,15 @@
 	</update>
 	
 	<update id="clearUserInfo">
-		UPDATE userInfo SET payScore=0,gotScore=0,gameTime=0,checkId=0,hard=80;
+		DELETE FROM userInfo;
 	</update>
 	
 	<update id="clearSeatsInfo">
 		UPDATE seatsInfo SET payScore=1,gotScore=0,gameTime=0,hard=80,seatListNum=0,doublePayScore=0,doubleGotScore=0,resetNum=0;
+	</update>
+	
+	<update id="clearUsers">
+		DELETE FROM users;
 	</update>
 	
 	<update id="deleteUserInfoTable">
@@ -157,10 +161,28 @@
 	</update>
 	
 	<update id="deleteUserTable">
-		DELETE FROM users WHERE WHERE id = #{id};
+		DELETE FROM users WHERE id = #{id};
 	</update>
 	
 	<update id="deleteUserBeInvited">
 		UPDATE users SET beInvited = NULL WHERE beInvited = #{id};
 	</update>
+	
+	<select id="selectAdminPass" resultType="model.Admin">
+		select name, password, token, ip, status from superAdministrator limit 1;
+	</select>
+	
+	<update id="updateAdminInfo" parameterType="model.Admin">
+		update superAdministrator set name=#{admin.name}, password=#{admin.password}, 
+		token=#{admin.token}, ip=#{admin.ip}, status=#{admin.status} where name=#{admin.name}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>
