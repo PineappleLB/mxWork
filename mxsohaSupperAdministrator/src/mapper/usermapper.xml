@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的 
+	例如namespace="me.gacl.mapping.userMapper"就是me.gacl.mapping(包名)+userMapper(userMapper.xml文件去除后缀) -->
+<mapper namespace="mapper.UserMapper">
+	<!-- 根据用户名查询对象 -->
+	<select id="selectUserByName" resultType="model.Admin">
+		select name,password,token,ip,status from superAdministrator where name=#{name} and status != 2
+	</select>
+	<!-- 更新用户ip和状态 -->
+	<update id="updateUserIp">
+		update superAdministrator set status = 1,ip = #{ip} where name = #{name}
+	</update>
+	<!-- 添加金币 -->
+	<update id="addUserMoney">
+		update users set money = money + #{money} where id = #{id} and status != 2;
+	</update>
+	
+	<update id="addMoneyByAdmin">
+		update promoters set balance = balance + #{money} where id = #{id};
+	</update>
+	
+	<!-- 根据id查询用户金币-->
+	<select id="selectUserMoneyById" resultType="java.lang.Double">
+		select money from users where id = #{id}
+	</select>
+	
+	<!-- 退出登录 -->
+	<update id="logout">
+		update superAdministrator set status = 0 where name = #{name};
+	</update>
+	<!-- 封禁管理员 -->
+	<update id="closureAdmin">
+		update superAdministrator set status = 2 where name = #{name}
+	</update>
+	
+	<select id="selectPromoterByName" resultType="model.Promoter">
+		select id, `name`, `password`, token, parentId, balance, logTime from promoters where `name`=#{name}
+	</select>
+	
+	<update id="updatePromoterLogTime">
+		update promoters set logTime=NOW() where id=#{id}
+	</update>
+	
+	<select id="selectPromoterById" resultType="model.Promoter">
+		select id, name, password, token, parentId, balance, logTime from promoters where id=#{id}
+	</select>
+	
+	<update id="updatePromoterPass">
+		update promoters set `password`=#{pass} where id=#{id}
+	</update>
+	
+	<update id="addPromoterBalance">
+		update promoters set balance=balance+#{balance} where id=#{id}
+	</update>
+	
+	<update id="addPromoterRecords">
+		insert into promotersRecords (promId, `add`, reduce, `time`, `by`) values (#{id}, #{add}, #{reduce}, now(), #{by})
+	</update>
+	
+	<select id="selectAdminRecords" resultType="java.util.HashMap">
+		SELECT promId, `add`, `reduce`, `time` FROM promotersRecords WHERE MONTH(`time`)=#{month} AND YEAR(`time`)=#{year} AND promId=0
+	</select>
+	
+	<select id="getSupperParentPromoter" resultType="model.Promoter">
+		SELECT id,`name` FROM promoters WHERE id IN (
+			SELECT parentId FROM promoters WHERE parentId IN (
+				SELECT parentId FROM promoters WHERE id IN (
+					SELECT parentId FROM promoters WHERE id=3
+				)
+			)
+		)
+	</select>
+	
+	<update id="addChildPromoter" parameterType="model.Promoter">
+		insert into promoters (id, `name`, `password`, token, parentId, balance, logTime)
+		values (default, #{name}, #{password}, #{token}, #{parentId}, 0, NOW());
+	</update>
+	
+	<select id="selectClindPromInfo" resultType="java.util.HashMap">
+		SELECT id, `name`, balance, SUM(`add`) as add, SUM(reduce) as reduce FROM promoters, promotersRecords WHERE promoters.id=promotersrecords.promId 
+			AND promoters.parentid=#{id} GROUP BY promoters.id;
+	</select>
+	
+	<select id="selectUsersInfo" resultType="java.util.HashMap">
+		<!-- SELECT id,`userName`, money, SUM(`add`) as `add`, SUM(`reduce`) as reduce FROM users,promotersRecords WHERE users.id=promotersrecords.by AND promId=#{id}
+			 GROUP BY users.id; -->
+		SELECT id,username,money,`add`,`reduce` FROM users LEFT JOIN (SELECT SUM(`add`) AS `add`,SUM(`reduce`) AS `reduce`,`by` FROM promotersRecords WHERE `by` IN 
+			(SELECT id FROM users WHERE users.beInvited=#{id}) GROUP BY `by`) AS tbl ON users.id=`by` WHERE users.beInvited=#{id}
+	</select>
+	
+	<select id="selectPromoterBalanceById" resultType="java.lang.Integer">
+		select balance from promoters where id=#{id}
+	</select>
+	
+	<select id="selectUserAddRecords" resultType="java.util.HashMap">
+		SELECT `name`,`time`,`add` FROM promotersRecords,promoters WHERE promotersRecords.promId=promoters.id AND 
+			promoters.id=#{id} AND YEAR(`time`)=#{year} AND MONTH(`time`)=#{month} AND DAY(`time`)=#{day};
+	</select>	
+	
+	<select id="selectReduceRecords" resultType="java.util.HashMap">
+		SELECT `name`,`time`,`reduce` FROM promotersRecords,promoters WHERE promotersRecords.promId=promoters.id AND 
+			promoters.id=#{id} AND YEAR(`time`)=#{year} AND MONTH(`time`)=#{month} AND DAY(`time`)=#{day};
+	</select>	
+	
+	<select id="selectReduceMoneyByDay" resultType="java.util.HashMap">
+		SELECT SUM(`reduce`) as reduce,DATE(`time`) as `time` FROM promotersRecords  WHERE DAY(`time`)=#{day} AND MONTH(`time`)=#{month} AND YEAR(`time`)=#{year};
+	</select>
+	
+	<select id="selectAddMoneyByDay" resultType="java.util.HashMap">
+		SELECT SUM(`add`) as `add`,DATE(`time`) as `time` FROM promotersRecords  WHERE DAY(`time`)=#{day} AND MONTH(`time`)=#{month} AND YEAR(`time`)=#{year};
+	</select>
+	
+	<select id="selectMoneyByMonth" resultType="java.util.HashMap">
+		SELECT SUM(`reduce`) AS reduce,SUM(`add`) AS `add`,DATE(`time`) AS `dateTime` FROM promotersRecords 
+			WHERE promId != 0 AND MONTH(`time`)=2 AND YEAR(`time`)=2018 GROUP BY `dateTime`;
+	</select> 
+	
+	<select id="selectGameScoreRecords" resultType="java.util.HashMap">
+		SELECT SUM(payScore/roomDouble) AS pay,SUM(gotScore/roomDouble) AS got,DATE(`date`) AS `time` FROM records WHERE MONTH(`date`)=2 GROUP BY DAY(`date`);
+	</select>
+	
+	<select id="selectSystemLogs" resultType="java.util.HashMap">
+		select `time`,logs from systemLogs where day(`time`)=#{day} and month(`time`)=time and year(`time`)=#{year}
+	</select>
+	 
+	<update id="addSystemLog">
+		insert into systemLogs (`time`,logs,systemId) values(NOW(), #{log}, #{id})
+	</update> 
+	
+	<select id="selectPromNameById" resultType="java.lang.String">
+		select `name` from promoters where id=#{promId}
+	</select>
+	
+	<select id="selectUserIdByName" resultType="java.lang.Integer">
+		select id from users where userName = #{name};
+	</select>
+	
+	<update id="ctrlUserHard">
+		update userInfo set hard=#{hard} where userId=#{id}
+	</update>
+	
+	<update id="ctrlSeatIdHard">
+		update seatsInfo set hard=#{hard} where seatId=#{id}
+	</update>
+	
+	<update id="clearUserInfo">
+		UPDATE userInfo SET payScore=0,gotScore=0,gameTime=0,checkId=0,hard=80;
+	</update>
+	
+	<update id="clearSeatsInfo">
+		UPDATE seatsInfo SET payScore=1,gotScore=0,gameTime=0,hard=80,seatListNum=0,doublePayScore=0,doubleGotScore=0,resetNum=0;
+	</update>
+	
+	<update id="deleteUserInfoTable">
+		DELETE FROM userInfo WHERE userId = #{id};
+	</update>
+	
+	<update id="deleteUserTable">
+		DELETE FROM users WHERE WHERE id = #{id};
+	</update>
+	
+	<update id="deleteUserBeInvited">
+		UPDATE users SET beInvited = NULL WHERE beInvited = #{id};
+	</update>
+</mapper>

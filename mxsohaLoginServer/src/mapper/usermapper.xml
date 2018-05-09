@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的 
+	例如namespace="me.gacl.mapping.userMapper"就是me.gacl.mapping(包名)+userMapper(userMapper.xml文件去除后缀) -->
+<mapper namespace="mapper.UserMapper">
+
+	<select id="selectUserByName" resultType="model.User">
+		select id,username,lastPlayTime,password,token,ip,money,status,staySeatTime from users where username=#{name}
+	</select>
+	
+	<update id="updateUserIp">
+		update users set status = 3, ip = #{ip}, staySeatTime=#{staySeatTime}, lastPlayTime=NOW() where id = #{id}
+	</update>
+	
+	<insert id="userRegister" parameterType="model.User">
+		insert into users (id, username, password, token, ip, phone, money, status, lastPlayTime,beInvited)
+		values(default, #{username}, #{password}, #{token}, #{ip}, null, 0, default, now(),#{beInvited})
+	</insert>
+	
+	<select id="userCount" resultType="java.lang.Integer">
+		select count(1)  from  promoters where id = #{beInvited}
+	</select>
+	
+	<insert id="userInfoRegister" parameterType="model.User">
+		insert into userInfo (userId, payScore, gotScore, gameTime, checkId, hard)
+		select distinct id, 0,0,0,0,0 from users where username=#{username}
+	</insert>
+	
+	<select id="verifyName" resultType="java.lang.Integer">
+		select count(1) from users where username=#{username}
+	</select>
+	
+	<select id="adminValidate" resultType="java.lang.Integer">
+		select status from superadministrator where name='controller';
+	</select>
+	
+	<update id="updateStaySeatTime">
+		update users set lastPlayTime=NOW(),staySeatTime=#{time} where id=#{id}
+	</update>
+	
+	<update id="updateControllerValue">
+		update superAdministrator set status=#{status} where name='controller';
+	</update>
+	
+	<select id="selectPromoterByName" resultType="model.Promoter">
+		select id, name, password, token, parentId, balance, logTime from promoters where name=#{name}
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="library/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="library/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="library/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="library/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="library/ezmorph-1.0.4.jar"/>
+	<classpathentry kind="lib" path="library/json-lib-2.2.3-jdk13.jar"/>
+	<classpathentry kind="lib" path="library/mybatis-3.2.7.jar"/>
+	<classpathentry kind="lib" path="library/mysql-connector-java-5.1.44-bin.jar"/>
+	<classpathentry kind="lib" path="library/netty-all-4.0.54.Final.jar" sourcepath="E:/java/外部jar包/netty/netty-4.0.54.Final/jar/all-in-one/netty-all-4.0.54.Final-sources.jar"/>
+	<classpathentry kind="lib" path="library/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="library/commons-pool2-2.4.2.jar"/>
+	<classpathentry kind="lib" path="library/jedis-2.9.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

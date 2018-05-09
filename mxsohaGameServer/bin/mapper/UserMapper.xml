@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的 
+	例如namespace="me.gacl.mapping.userMapper"就是me.gacl.mapping(包名)+userMapper(userMapper.xml文件去除后缀) -->
+<mapper namespace="mapper.UserMapper">
+	
+	<select id="getUserNameById" resultType="java.lang.String">
+		select username from users where id=#{id}
+	</select>
+	
+	<select id="getSeatsInfo" resultType="model.SeatsInfo">
+		select seatId,gameTime,payScore,gotScore,hard,doublePayScore,doubleGotScore,resetNum from seatsInfo where seatId=#{id}
+	</select>
+	
+	<select id="getUserInfo" resultType="model.UserInfo">
+		select userId,payScore,gotScore,gameTime,checkId,hard from UserInfo where userId=#{userId}
+	</select>
+	
+	<select id="getUserById" resultType="model.User">
+		select id,username,money,status from users where id=#{userId}
+	</select>
+	
+	<!-- userInfo befor -->
+	<update id="updateCheckId">
+		update userinfo set checkId=#{checkId},gameTime=gameTime+1,payScore=payScore+#{score} where userid=#{id}
+	</update>
+	
+	<!-- userInfo befor -->
+	<update id="updateUserInfo">
+		update userInfo set gotScore=gotScore+#{gotScore} where userId=#{userId}
+	</update>
+	
+	<!-- users -->
+	<update id="updateMoney">
+		update users set money=money+#{money},lastPlayTime=NOW() where id=#{id}
+	</update>
+	
+	<!-- seatsInfo after -->
+	<update id="updateSeatInfo">
+		update seatsInfo set payScore=payScore+#{payScore}, gotScore=gotScore+#{gotScore} where seatId=#{id}
+	</update>
+	
+	<!-- seatsInfo befor -->
+	<update id="updateSeatListNum">
+		update seatsInfo set seatListNum=#{num},resetNum=#{resetNum},gameTime=gameTime+1,payScore=payScore+#{payScore} where seatId=#{id}
+	</update>
+	
+	<!-- seatsInfo after -->
+	<update id="updateSeatDoubleScore">
+		update seatsInfo set doublePayScore=doublePayScore+#{payScore}, doubleGotScore=doubleGotScore+#{gotScore} where seatId=#{id}	
+	</update>
+	
+	<select id="selectSeatRecords" resultType="java.util.HashMap">
+		SELECT pay,got,playTime,winTime,doublePay,doubleGot,doublePlayTime,doubleWinTime,handsel,HandselTime,
+			noPair,onePair,twoPair,three,straight,`flush`,fullHouse,4K,SF,RS,5K FROM 
+			(SELECT SUM(payScore) AS pay,SUM(gotScore) AS got,COUNT(1) AS playTime FROM records where seatId=#{seatId}) AS `tbl1`,
+			(SELECT COUNT(1) AS winTime FROM records WHERE isDouble=0 AND gotScore>0 and seatId=#{seatId}) AS `tbl2`,
+			(SELECT SUM(payScore) AS doublePay,SUM(gotScore) AS doubleGot,COUNT(payScore) AS doublePlayTime FROM records WHERE isDouble=1 and seatId=#{seatId}) AS `tbl3`,
+			(SELECT COUNT(gotScore) AS doubleWinTime FROM records WHERE gotScore>0 AND isDouble=1 and seatId=#{seatId}) AS `tbl4`,
+			(SELECT SUM(gotScore) AS handsel,COUNT(gotScore) AS HandselTime FROM records WHERE gotScore>0 AND isDouble=2 and seatId=#{seatId}) AS `tbl5`,
+			(SELECT COUNT(1) AS noPair FROM records WHERE `double`=0 AND isDouble=0 and seatId=#{seatId}) AS tbl6,
+			(SELECT COUNT(1) AS onePair FROM records WHERE `double`=1 AND isDouble=0 and seatId=#{seatId}) AS tbl7,
+			(SELECT COUNT(1) AS twoPair FROM records WHERE `double`=2 AND isDouble=0 and seatId=#{seatId}) AS tbl8,
+			(SELECT COUNT(1) AS three FROM records WHERE `double`=3 AND isDouble=0 and seatId=#{seatId}) AS tbl9,
+			(SELECT COUNT(1) AS straight FROM records WHERE `double`=4 AND isDouble=0 and seatId=#{seatId}) AS tbl10,
+			(SELECT COUNT(1) AS `flush` FROM records WHERE `double`=5 AND isDouble=0 and seatId=#{seatId}) AS tbl11,
+			(SELECT COUNT(1) AS fullHouse FROM records WHERE `double`=6 AND isDouble=0 and seatId=#{seatId}) AS tbl12,
+			(SELECT COUNT(1) AS 4K FROM records WHERE `double`=7 AND isDouble=0 and seatId=#{seatId}) AS tbl13,
+			(SELECT COUNT(1) AS SF FROM records WHERE `double`=8 AND isDouble=0 and seatId=#{seatId}) AS tbl14,
+			(SELECT COUNT(1) AS RS FROM records WHERE `double`=9 AND isDouble=0 and seatId=#{seatId}) AS tbl15,
+			(SELECT COUNT(1) AS 5K FROM records WHERE `double`=10 AND isDouble=0 and seatId=#{seatId}) AS tbl16;
+	</select>
+
+	<update id="addRecords">
+		insert into records (userId,seatId,`date`,isDouble,payScore,`double`,gotScore,roomDouble)
+			values(#{userId},#{seatId},NOW(),#{isDouble},#{payScore},#{double},#{gotScore},#{roomDouble})
+	</update>	
+	
+</mapper>
