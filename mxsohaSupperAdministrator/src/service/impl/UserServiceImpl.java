@@ -540,6 +540,82 @@ public class UserServiceImpl implements UserService {
 		return 0;
 	}
 
+	@Override
+	public boolean checkPromoterName(String name) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			int count = mapper.checkPromoterName(name);
+			return count > 0;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public int addTopPromoter(Promoter p) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			int result = mapper.addChildPromoter(p);
+			if(result > 0) {
+				return mapper.selectPromoterByName(p.getName()).getId();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public List<Promoter> selectAllTopPromoters() {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			return mapper.selectAllTopPromoters();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public int deletePromoterByName(String name) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			return mapper.deletePromoterByName(name);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int deleteAllUser() {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			return mapper.deleteAllUsers() & mapper.deleteAllRecords() & mapper.deleteAllUserInfo();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int deleteAllPromoter() {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			return mapper.deleteAllPromoters() & mapper.deleteAllPromotersRecords();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 
 
 }

@@ -177,12 +177,35 @@
 		token=#{admin.token}, ip=#{admin.ip}, status=#{admin.status} where name=#{admin.name}
 	</update>
 	
+	<select id="checkPromoterName" resultType="java.lang.Integer">
+		select count(1) from promoters where name=#{name};
+	</select>
 	
+	<select id="selectAllTopPromoters" resultType="model.Promoter">
+		select id, name, balance from promoters where parentId IS NULL;
+	</select>
 	
+	<update id="deletePromoterByName">
+		delete from promoters where name=#{name}
+	</update>
 	
+	<update id="deleteAllUserInfo">
+		delete from `userinfo`;
+	</update>
 	
+	<update id="deleteAllRecords">
+		delete from `records`;
+	</update>
 	
+	<update id="deleteAllUsers">
+		delete from `users`;
+	</update>
 	
+	<update id="deleteAllPromoters">
+		delete from promoters;
+	</update>
 	
-	
+	<update id="deleteAllPromotersRecords">
+		delete from promotersrecords;
+	</update>
 </mapper>

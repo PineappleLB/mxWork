@@ -1,6 +1,5 @@
 /mxsohaSupperAdministrator/
-/mapper/
-/service/
 /server/
+/service/
+/mapper/
 /model/
-/utils/

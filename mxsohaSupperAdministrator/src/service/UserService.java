@@ -236,4 +236,43 @@ public interface UserService {
 	 */
 	int updateAdminPass(String oldPass, String newPass);
 
+	/**
+	 * 检查是否有这个name的推广员
+	 * @param name
+	 * @return
+	 */
+	boolean checkPromoterName(String name);
+
+	/**
+	 * 添加以及推广员
+	 * @param p
+	 * @return 推广员id， 推广码
+	 */
+	int addTopPromoter(Promoter p);
+
+	/**
+	 * 查询所有一级推广员
+	 * @return
+	 */
+	List<Promoter> selectAllTopPromoters();
+
+	/**
+	 * 根据用户名删除制定推广员
+	 * @param name
+	 * @return
+	 */
+	int deletePromoterByName(String name);
+
+	/**
+	 * 删除所有玩家
+	 * @return
+	 */
+	int deleteAllUser();
+
+	/**
+	 * 删除所有推广员
+	 * @return
+	 */
+	int deleteAllPromoter();
+
 }

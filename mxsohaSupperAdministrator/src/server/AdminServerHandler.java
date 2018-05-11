@@ -183,34 +183,76 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	}
 	
 	private void deleteAllPromoter(ChannelHandlerContext context, JSONObject obj) {
-		// TODO Auto-generated method stub
-		
+		int result = service.deleteAllPromoter();
+		obj = new JSONObject();
+		if(result > 0) {
+			obj.put("order", "success");
+		} else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	private void deleteAllUser(ChannelHandlerContext context, JSONObject obj) {
-		// TODO Auto-generated method stub
-		
+		int result = service.deleteAllUser();
+		obj = new JSONObject();
+		if(result > 0) {
+			obj.put("order", "success");
+		} else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	private void deletePromoterByName(ChannelHandlerContext context, JSONObject obj) {
-		// TODO Auto-generated method stub
-		
+		String name = obj.getString("promoterName");
+		obj = new JSONObject();
+		int result = service.deletePromoterByName(name);
+		if(result > 0) {
+			obj.put("order", "success");
+		} else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	private void selectAllTopPromotersInfo(ChannelHandlerContext context, JSONObject obj) {
-		// TODO Auto-generated method stub
-		
+		List<Promoter> promoters = service.selectAllTopPromoters();
+		obj = new JSONObject();
+		if(promoters != null) {
+			obj.put("order", "success");
+			obj.put("promoters", promoters);
+		} else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	private void addTopPromoterByAdmin(ChannelHandlerContext context, JSONObject obj) {
-		// TODO Auto-generated method stub
-		
+		String name = obj.getString("name");
+		String pass = obj.getString("pass");
+		obj = new JSONObject();
+		//如果没有此用户名
+		if(!service.checkPromoterName(name)) {
+			Promoter p = new Promoter(name, pass);
+			int promoterId = service.addTopPromoter(p);
+			if(promoterId > 0) {
+				obj.put("order", "success");
+				obj.put("invitedCode", promoterId);
+			} else {
+				obj.put("order", "error");
+			}
+		} else {
+			throw new IllegalArgumentException("用户名已经存在！");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	private void updateAdminPass(ChannelHandlerContext context, JSONObject obj) {
 		String oldPass = obj.getString("oldPass");
 		String newPass = obj.getString("newPass");
 		int result = service.updateAdminPass(oldPass, newPass);
+		obj = new JSONObject();
 		if(result > 0) {
 			obj.put("order", "success");
 		}else {
@@ -222,6 +264,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	private void deleteUserInfoByName(ChannelHandlerContext context, JSONObject obj) {
 		String name = obj.getString("name");
 		int result = service.deleteUserInfo(0, name);
+		obj = new JSONObject();
 		if(result > 0) {
 			obj.put("order", "success");
 		}else {
@@ -233,6 +276,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	private void deleteUserInfoById(ChannelHandlerContext context, JSONObject obj) {
 		int id = obj.getInt("id");
 		int result = service.deleteUserInfo(id, null);
+		obj = new JSONObject();
 		if(result > 0) {
 			obj.put("order", "success");
 		}else {
@@ -243,6 +287,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 
 	private void clearInfoTable(ChannelHandlerContext context, JSONObject obj) {
 		int result = service.clearInfoTable();
+		obj = new JSONObject();
 		if(result > 0) {
 			obj.put("order", "success");
 		}else {
@@ -478,6 +523,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	 * @param context
 	 * @param obj
 	 */
+	@SuppressWarnings("unused")
 	private void reduceMoneyByAdmin(ChannelHandlerContext context, JSONObject obj) {
 		int promId = obj.getInt("id");
 		int money = obj.getInt("money");

@@ -281,4 +281,21 @@ public interface UserMapper {
 	Admin selectAdminPass();
 
 	int updateAdminInfo(@Param(value="admin")Admin admin);
+
+	int checkPromoterName(@Param(value="name")String name);
+
+	List<Promoter> selectAllTopPromoters();
+
+	int deletePromoterByName(@Param(value="name")String name);
+
+	int deleteAllUsers();
+	
+	int deleteAllUserInfo();
+	
+	int deleteAllRecords();
+
+	int deleteAllPromoters();
+
+	int deleteAllPromotersRecords();
+
 }

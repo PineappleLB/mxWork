@@ -60,6 +60,16 @@ public class Promoter {
 	
 	public Promoter() {}
 
+	public Promoter(String name, String pass) {
+		try {
+			this.name = name;
+			this.token = StringUtils.getRandomUUID();
+			this.password = StringUtils.encode(pass+token);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public int getId() {
 		return id;
 	}
