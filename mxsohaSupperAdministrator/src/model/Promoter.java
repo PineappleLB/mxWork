@@ -125,6 +125,12 @@ public class Promoter {
 	public void setLogTime(Timestamp logTime) {
 		this.logTime = logTime;
 	}
+
+	@Override
+	public String toString() {
+		return "Promoter [id=" + id + ", name=" + name + ", password=" + password + ", token=" + token + ", parentId="
+				+ parentId + ", balance=" + balance + ", logTime=" + logTime + "]";
+	}
 	
 	
 	

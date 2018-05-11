@@ -74,7 +74,14 @@
 	
 	<update id="addChildPromoter" parameterType="model.Promoter">
 		insert into promoters (id, `name`, `password`, token, parentId, balance, logTime)
-		values (default, #{name}, #{password}, #{token}, #{parentId}, 0, NOW());
+		values (default, #{name}, #{password}, #{token}, 
+		<if test="parentId > 0">
+			#{parentId},	
+		</if>
+		<if test="parentId == 0">
+			NULL,	
+		</if>
+		 0, NOW());
 	</update>
 	
 	<select id="selectClindPromInfo" resultType="java.util.HashMap">
