@@ -235,10 +235,10 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 		//如果没有此用户名
 		if(!service.checkPromoterName(name)) {
 			Promoter p = new Promoter(name, pass);
-			int promoterId = service.addTopPromoter(p);
-			if(promoterId > 0) {
+			String invitedCode = service.addTopPromoter(p);
+			if(invitedCode != null) {
 				obj.put("order", "success");
-				obj.put("invitedCode", promoterId);
+				obj.put("invitedCode", invitedCode);
 			} else {
 				obj.put("order", "error");
 			}
@@ -595,7 +595,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	 * @param obj
 	 */
 	private void addPromoter(ChannelHandlerContext context, JSONObject obj) {
-		int promId = obj.getInt("id");
+		String promId = obj.getString("id").toUpperCase();
 		Promoter prom = service.getSupperParentPromoter(promId);
 		if(prom!=null) {
 			throw new IllegalArgumentException("没有开通管理权限！");
@@ -681,6 +681,8 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 			writeAndFlush(context, obj.toString());
 			return;
 		}
+		pro.setPassword(null);
+		pro.setToken(null);
 		obj.put("order", "success");
 		obj.put("promPort", configProps.getProperty("promPort"));
 		obj.put("promHost", configProps.getProperty("host"));

@@ -74,7 +74,7 @@ public interface UserService {
 	 * @param promId
 	 * @return
 	 */
-	Promoter getSupperParentPromoter(int promId);
+	Promoter getSupperParentPromoter(String promId);
 
 	/**
 	 * 查询用户金币记录
@@ -248,7 +248,7 @@ public interface UserService {
 	 * @param p
 	 * @return 推广员id， 推广码
 	 */
-	int addTopPromoter(Promoter p);
+	String addTopPromoter(Promoter p);
 
 	/**
 	 * 查询所有一级推广员

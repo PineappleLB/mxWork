@@ -76,4 +76,8 @@
 			values(#{userId},#{seatId},NOW(),#{isDouble},#{payScore},#{double},#{gotScore},#{roomDouble})
 	</update>	
 	
+	<select id="selectUserMoneyById" resultType="java.lang.Double">
+		select money from users where id=#{id};
+	</select>
+	
 </mapper>

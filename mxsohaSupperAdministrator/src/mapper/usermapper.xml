@@ -35,7 +35,7 @@
 	</update>
 	
 	<select id="selectPromoterByName" resultType="model.Promoter">
-		select id, `name`, `password`, token, parentId, balance, logTime from promoters where `name`=#{name}
+		select id, `name`, `password`, token, parentId, balance, logTime, invitedCode from promoters where `name`=#{name}
 	</select>
 	
 	<update id="updatePromoterLogTime">
@@ -43,7 +43,7 @@
 	</update>
 	
 	<select id="selectPromoterById" resultType="model.Promoter">
-		select id, name, password, token, parentId, balance, logTime from promoters where id=#{id}
+		select id, name, password, token, parentId, balance, logTime, invitedCode from promoters where id=#{id}
 	</select>
 	
 	<update id="updatePromoterPass">
@@ -63,35 +63,22 @@
 	</select>
 	
 	<select id="getSupperParentPromoter" resultType="model.Promoter">
-		SELECT id,`name` FROM promoters WHERE id IN (
-			SELECT parentId FROM promoters WHERE parentId IN (
-				SELECT parentId FROM promoters WHERE id IN (
-					SELECT parentId FROM promoters WHERE id=3
-				)
-			)
+		SELECT id, NAME FROM promoters WHERE invitedCode IN (
+			SELECT parentId FROM promoters WHERE invitedCode =#{id}
 		)
 	</select>
 	
 	<update id="addChildPromoter" parameterType="model.Promoter">
-		insert into promoters (id, `name`, `password`, token, parentId, balance, logTime)
-		values (default, #{name}, #{password}, #{token}, 
-		<if test="parentId > 0">
-			#{parentId},	
-		</if>
-		<if test="parentId == 0">
-			NULL,	
-		</if>
-		 0, NOW());
+		insert into promoters (id, `name`, `password`, token, parentId, balance, logTime, InvitedCode)
+		values (default, #{name}, #{password}, #{token}, #{parentId},0, NOW(), #{invitedCode});
 	</update>
 	
 	<select id="selectClindPromInfo" resultType="java.util.HashMap">
-		SELECT id, `name`, balance, SUM(`add`) as add, SUM(reduce) as reduce FROM promoters, promotersRecords WHERE promoters.id=promotersrecords.promId 
-			AND promoters.parentid=#{id} GROUP BY promoters.id;
+		SELECT id, `name`, balance, SUM(`add`) AS `add`, SUM(reduce) AS reduce FROM promoters, promotersRecords WHERE promoters.id=promotersrecords.promId 
+			AND promoters.parentid IN (SELECT invitedCode FROM promoters WHERE id=#{id}) GROUP BY promoters.id;
 	</select>
 	
 	<select id="selectUsersInfo" resultType="java.util.HashMap">
-		<!-- SELECT id,`userName`, money, SUM(`add`) as `add`, SUM(`reduce`) as reduce FROM users,promotersRecords WHERE users.id=promotersrecords.by AND promId=#{id}
-			 GROUP BY users.id; -->
 		SELECT id,username,money,`add`,`reduce` FROM users LEFT JOIN (SELECT SUM(`add`) AS `add`,SUM(`reduce`) AS `reduce`,`by` FROM promotersRecords WHERE `by` IN 
 			(SELECT id FROM users WHERE users.beInvited=#{id}) GROUP BY `by`) AS tbl ON users.id=`by` WHERE users.beInvited=#{id}
 	</select>
@@ -121,7 +108,7 @@
 	<select id="selectMoneyByMonth" resultType="java.util.HashMap">
 		SELECT SUM(`reduce`) AS reduce,SUM(`add`) AS `add`,DATE(`time`) AS `dateTime` FROM promotersRecords 
 			WHERE promId != 0 AND MONTH(`time`)=2 AND YEAR(`time`)=2018 GROUP BY `dateTime`;
-	</select> 
+	</select>
 	
 	<select id="selectGameScoreRecords" resultType="java.util.HashMap">
 		SELECT SUM(payScore/roomDouble) AS pay,SUM(gotScore/roomDouble) AS got,DATE(`date`) AS `time` FROM records WHERE MONTH(`date`)=2 GROUP BY DAY(`date`);

@@ -110,6 +110,13 @@ public interface UserService {
 	 * @param multiplyPower
 	 */
 	void addRecords(int userId, Integer seatId, int i, int gameScore, int result, int j, int multiplyPower);
+
+	/**
+	 * 查询用户金币余额
+	 * @param userId
+	 * @return
+	 */
+	int getUserMoneyById(int userId);
 	
 
 }

@@ -445,6 +445,9 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 //		else if(score<GameUtil.minScore){
 //			throw new IllegalArgumentException("参数错误，分数不满足最小押分需求");
 //		}
+		if(this.score > service.getUserMoneyById(userId)) {
+			throw new IllegalArgumentException("发牌失败，您的余额不足！");
+		}
 		if(username==null || "".equals(username)){
 			username = service.getUserName(userId);
 		}

@@ -138,6 +138,18 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public int getUserMoneyById(int userId) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		try {
+			mapper.selectUserMoneyById(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 
 	
 //	public static void main(String[] args) {

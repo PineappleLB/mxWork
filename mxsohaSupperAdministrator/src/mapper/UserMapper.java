@@ -105,7 +105,7 @@ public interface UserMapper {
 	 * @param promId
 	 * @return
 	 */
-	Promoter getSupperParentPromoter(@Param(value="id")int promId);
+	Promoter getSupperParentPromoter(@Param(value="id")String promId);
 
 	/**
 	 * 添加子级推广员

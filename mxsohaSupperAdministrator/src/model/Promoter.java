@@ -35,7 +35,7 @@ public class Promoter {
 	/**
 	 * 推广员上一级id
 	 */
-	private int parentId;
+	private String parentId;
 	
 	/**
 	 * 推广员账户余额
@@ -43,16 +43,22 @@ public class Promoter {
 	private int balance;
 	
 	/**
+	 * 推广员邀请码
+	 */
+	private String invitedCode;
+	
+	/**
 	 * 推广员上一次登录时间	
 	 */
 	private Timestamp logTime;
 
-	public Promoter(String name, String password, int promId) {
+	public Promoter(String name, String password, String promId) {
 		try {
 			this.name = name;
 			this.token = StringUtils.getRandomUUID();
 			this.password = StringUtils.encode(password+token);
 			this.parentId = promId;
+			this.invitedCode = this.token.substring(0, 6).toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -65,6 +71,7 @@ public class Promoter {
 			this.name = name;
 			this.token = StringUtils.getRandomUUID();
 			this.password = StringUtils.encode(pass+token);
+			this.invitedCode = this.token.substring(0, 6).toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -102,11 +109,11 @@ public class Promoter {
 		this.token = token;
 	}
 
-	public int getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(int parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 
@@ -126,12 +133,18 @@ public class Promoter {
 		this.logTime = logTime;
 	}
 
+	public String getInvitedCode() {
+		return invitedCode;
+	}
+
+	public void setInvitedCode(String invitedCode) {
+		this.invitedCode = invitedCode;
+	}
+
 	@Override
 	public String toString() {
 		return "Promoter [id=" + id + ", name=" + name + ", password=" + password + ", token=" + token + ", parentId="
-				+ parentId + ", balance=" + balance + ", logTime=" + logTime + "]";
+				+ parentId + ", balance=" + balance + ", invitedCode=" + invitedCode + ", logTime=" + logTime + "]";
 	}
-	
-	
-	
+
 }

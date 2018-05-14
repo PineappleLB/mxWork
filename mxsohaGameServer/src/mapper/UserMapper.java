@@ -111,6 +111,8 @@ public interface UserMapper {
 	 */
 	void addRecords(@Param(value="userId")int userId, @Param(value="seatId")Integer seatId, @Param(value="isDouble")int i, 
 			@Param(value="payScore")int gameScore, @Param(value="double")int result, @Param(value="gotScore")int j, @Param(value="roomDouble")int multiplyPower);
+
+	double selectUserMoneyById(@Param(value="id")int id);
 	
 	
 

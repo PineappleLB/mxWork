@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
 
 	//查询当前推广员的祖级推广员
 	@Override
-	public Promoter getSupperParentPromoter(int promId) {
+	public Promoter getSupperParentPromoter(String promId) {
 		session = MyBatisUtil.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		Promoter prom = null;
@@ -554,18 +554,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int addTopPromoter(Promoter p) {
+	public String addTopPromoter(Promoter p) {
 		session = MyBatisUtil.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
 			int result = mapper.addChildPromoter(p);
 			if(result > 0) {
-				return mapper.selectPromoterByName(p.getName()).getId();
+				return mapper.selectPromoterByName(p.getName()).getInvitedCode();
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return null;
 	}
 
 	@Override

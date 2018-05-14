@@ -25,9 +25,10 @@ CREATE TABLE `promoters` (
   `name` varchar(10) NOT NULL COMMENT '用户名',
   `password` varchar(36) NOT NULL COMMENT '密码',
   `token` varchar(36) NOT NULL COMMENT '密码随机盐',
-  `parentId` int(6) DEFAULT NULL COMMENT '上一级代理Id',
+  `parentId` char(6) DEFAULT NULL COMMENT '上一级代理Id',
   `balance` int(10) NOT NULL COMMENT '余额',
   `logTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最近登录时间',
+  `invitedCode` char(6) DEFAULT NULL COMMENT '随机邀请码',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `name_2` (`name`),
@@ -36,12 +37,13 @@ CREATE TABLE `promoters` (
 
 /*Data for the table `promoters` */
 
-insert  into `promoters`(`id`,`name`,`password`,`token`,`parentId`,`balance`,`logTime`) values 
-(100001,'yzx2','YfI0ZOD8Cl6vbyQ0wCEW+A==','6b9f55ffcbdd4b07ba58475a903d18bd',100005,0,'2018-02-07 17:53:39'),
-(100002,'b','b','b',100005,1,'2018-02-04 11:07:32'),
-(100003,'c','c','c',100002,1,'2018-02-04 11:07:44'),
-(100004,'d','d','d',100005,1,'2018-02-04 14:42:11'),
-(100005,'yzx','YfI0ZOD8Cl6vbyQ0wCEW+A==','6b9f55ffcbdd4b07ba58475a903d18bd',NULL,210000,'2018-02-09 16:05:06');
+insert  into `promoters`(`id`,`name`,`password`,`token`,`parentId`,`balance`,`logTime`,`invitedCode`) values 
+(100001,'yzx2','YfI0ZOD8Cl6vbyQ0wCEW+A==','6b9f55ffcbdd4b07ba58475a903d18bd','l6vbyQ',0,'2018-02-07 17:53:39','YfI0ZO'),
+(100002,'b','b','b','100005',1,'2018-02-04 11:07:32',NULL),
+(100003,'c','c','c','YfI0ZO',1,'2018-02-04 11:07:44',NULL),
+(100004,'d','d','d','100005',1,'2018-02-04 14:42:11',NULL),
+(100005,'yzx','YfI0ZOD8Cl6vbyQ0wCEW+A==','6b9f55ffcbdd4b07ba58475a903d18bd',NULL,210000,'2018-02-09 16:05:06','l6vbyQ'),
+(100006,'abcde','46uxk2ZCT/5bf4IBAb4i5Q==','369aba015f6e4ed7b949aaa0c23c7bc0',NULL,0,'2018-05-14 14:08:51','369aba');
 
 /*Table structure for table `promotersrecords` */
 
@@ -66,8 +68,8 @@ insert  into `promotersrecords`(`promId`,`add`,`reduce`,`time`,`by`) values
 (100003,0,10,'2018-02-05 14:28:43',100005),
 (100003,50,0,'2018-02-04 14:28:52',100006),
 (100004,50,0,'2018-02-04 14:42:19',100017),
-(0,5200,0,'2018-02-07 11:43:37',100001),
-(0,92000,0,'2018-02-07 11:44:57',100001),
+(100001,5200,0,'2018-02-07 11:43:37',100001),
+(100001,92000,0,'2018-02-07 11:44:57',100001),
 (0,102000,0,'2018-02-07 11:45:42',100001),
 (0,0,52000,'2018-02-07 11:46:49',100001),
 (0,10000,0,'2018-02-07 15:26:04',100002),
@@ -100,13 +102,6 @@ CREATE TABLE `records` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `records` */
-
-insert  into `records`(`userId`,`seatId`,`date`,`isDouble`,`payScore`,`double`,`gotScore`,`roomDouble`) values 
-(1,2,'2018-02-05 09:51:45',0,20,1,20,5),
-(2,2,'2018-02-06 10:00:11',0,50,2,100,5),
-(3,2,'2018-02-06 10:00:28',0,80,0,0,20),
-(3,2,'2018-02-06 10:01:02',0,80,0,0,20),
-(3,2,'2018-02-06 10:01:20',2,80,1,80,20);
 
 /*Table structure for table `seatsinfo` */
 
