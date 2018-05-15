@@ -1,3 +1,5 @@
-/server/
-/service/
+/mxsohaGameServer/
 /mapper/
+/service/
+/server/
+/client/

@@ -63,7 +63,7 @@ public class User{
 	/**
 	 * 被邀请人的邀请码
 	 */
-	private int beInvited;
+	private String beInvited;
 	
 	/**
 	 * 留机次数
@@ -78,11 +78,11 @@ public class User{
 		this.invitationCode = invitationCode;
 	}
 
-	public int getBeInvited() {
+	public String getBeInvited() {
 		return beInvited;
 	}
 
-	public void setBeInvited(int beInvited) {
+	public void setBeInvited(String beInvited) {
 		this.beInvited = beInvited;
 	}
 

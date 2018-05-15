@@ -18,7 +18,7 @@
 	</insert>
 	
 	<select id="userCount" resultType="java.lang.Integer">
-		select count(1)  from  promoters where id = #{beInvited}
+		select count(1)  from  promoters where invitedCode = #{beInvited}
 	</select>
 	
 	<insert id="userInfoRegister" parameterType="model.User">

@@ -35,7 +35,7 @@ public interface UserService {
 	 * 查找对应邀请人的邀请码是否存在
 	 * @param beInvited 用户id，邀请码
 	 */
-	int userCount(int beInvited);
+	int userCount(String beInvited);
 
 	/**
 	 * 验证用户名是否存在

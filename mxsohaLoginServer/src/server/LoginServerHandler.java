@@ -158,7 +158,7 @@ public class LoginServerHandler extends SimpleChannelInboundHandler<String>{
 		if(service.verifyName(name)) {
 			throw new IllegalArgumentException("用户名已经存在！");
 		}
-		int beInvited = obj.getInt("beInvited");
+		String beInvited = obj.getString("beInvited").toUpperCase();
 		//判断邀请码是否存在
 		if(service.userCount(beInvited)<=0) {
 			throw new IllegalArgumentException("您的邀请码不正确！");

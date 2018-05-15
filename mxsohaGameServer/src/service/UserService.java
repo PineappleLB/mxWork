@@ -116,7 +116,7 @@ public interface UserService {
 	 * @param userId
 	 * @return
 	 */
-	int getUserMoneyById(int userId);
+	double getUserMoneyById(int userId);
 	
 
 }

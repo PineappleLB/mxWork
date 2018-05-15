@@ -22,7 +22,7 @@ public class AdministratorTest {
 	}
 	@Test
 	public void testAddPromoter() {
-		String result = service.addTopPromoter(new Promoter("abcde", "123456"));
+		String result = service.addTopPromoter(new Promoter("qqqqq", "123456"));
 		System.out.println(result);
 	}
 	

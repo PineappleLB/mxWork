@@ -139,11 +139,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int getUserMoneyById(int userId) {
+	public double getUserMoneyById(int userId) {
 		session = MyBatisUtil.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
-			mapper.selectUserMoneyById(userId);
+			return mapper.selectUserMoneyById(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

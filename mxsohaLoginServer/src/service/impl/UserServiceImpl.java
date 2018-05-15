@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int userCount(int beInvited) {
+	public int userCount(String beInvited) {
 		session = MyBatisUtil.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		int count = 0;

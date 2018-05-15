@@ -79,8 +79,10 @@
 	</select>
 	
 	<select id="selectUsersInfo" resultType="java.util.HashMap">
-		SELECT id,username,money,`add`,`reduce` FROM users LEFT JOIN (SELECT SUM(`add`) AS `add`,SUM(`reduce`) AS `reduce`,`by` FROM promotersRecords WHERE `by` IN 
-			(SELECT id FROM users WHERE users.beInvited=#{id}) GROUP BY `by`) AS tbl ON users.id=`by` WHERE users.beInvited=#{id}
+		SELECT id,username,money,`add`,`reduce` FROM users 
+		LEFT JOIN (SELECT SUM(`add`) AS `add`,SUM(`reduce`) AS `reduce`,`by` FROM promotersRecords WHERE `by` IN 
+		(SELECT id FROM users WHERE CONVERT(users.beInvited USING utf8) COLLATE utf8_unicode_ci = (SELECT invitedCode FROM promoters WHERE id=#{id})) GROUP BY `by`) AS tbl 
+		ON users.id=`by` WHERE CONVERT(users.beInvited USING utf8) COLLATE utf8_unicode_ci=(SELECT invitedCode FROM promoters WHERE id=#{id})
 	</select>
 	
 	<select id="selectPromoterBalanceById" resultType="java.lang.Integer">

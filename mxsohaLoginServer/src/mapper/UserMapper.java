@@ -38,7 +38,7 @@ public interface UserMapper {
 	 * 查找邀请人是否存在
 	 * @param beInvited 用户id，邀请码
 	 */
-	int userCount(int beInvited);
+	int userCount(String beInvited);
 
 	/**
 	 * 用户信息添加
