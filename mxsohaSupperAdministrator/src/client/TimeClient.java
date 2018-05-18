@@ -48,7 +48,7 @@ public class TimeClient {
             ChannelFuture future = client.connect(host, port).sync();
             JSONObject arr = new JSONObject();
             
-        	arr.put("order", "addTopPromoterByAdmin");
+        	arr.put("order", "clearInfoTable");
         	arr.put("name", "pinea");
         	arr.put("pass", "123456");
 //        	arr.put("host", "118.112.108.229");

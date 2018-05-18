@@ -82,6 +82,9 @@ public class UserServiceImpl implements UserService {
 		session = MyBatisUtil.getTransactionSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
+			if(mapper.selectPromoterById(promId).getBalance() < money) {
+				throw new IllegalArgumentException("您的金币余额不足，无法充值！");
+			}
 			int result = mapper.addPromoterBalance(promId, money * -1);
 			if(result>0){
 				result = mapper.addUserMoney(userId, money);
@@ -169,6 +172,9 @@ public class UserServiceImpl implements UserService {
 		session = MyBatisUtil.getTransactionSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
 		try {
+			if(mapper.selectUserMoneyById(userId) < money) {
+				throw new IllegalArgumentException("玩家余额不足，兑换失败！");
+			}
 			int result = mapper.addUserMoney(userId, money * -1);
 			if(result>0){
 				double userMoney = mapper.selectUserMoneyById(userId);

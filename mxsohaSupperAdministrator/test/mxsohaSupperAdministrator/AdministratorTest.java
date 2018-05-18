@@ -12,8 +12,9 @@ public class AdministratorTest {
 	UserService service = new UserServiceImpl();
 	@Test
 	public void test1() {
-		int result = service.clearInfoTable();
-		System.out.println(result);
+		byte b = (byte) 140;
+		System.out.println(b + 256);
+		
 	}
 	@Test
 	public void testUpdatedminPass() {

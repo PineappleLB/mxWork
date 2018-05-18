@@ -23,7 +23,7 @@
 	
 	<insert id="userInfoRegister" parameterType="model.User">
 		insert into userInfo (userId, payScore, gotScore, gameTime, checkId, hard)
-		select distinct id, 0,0,0,0,0 from users where username=#{username}
+		select distinct id, 0,0,0,0,80 from users where username=#{username}
 	</insert>
 	
 	<select id="verifyName" resultType="java.lang.Integer">

@@ -28,7 +28,7 @@ public class AdminServerHandler extends SimpleChannelInboundHandler<String>{
 	
 	private RedisService redisService = new RedisServiceImpl();
 	
-	private static Logger logger = Logger.getLogger(AdminServerHandler.class);  
+	private static Logger logger = Logger.getLogger(AdminServerHandler.class);
 	
 	private String clientIp;
 	
