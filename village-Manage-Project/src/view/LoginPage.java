@@ -18,31 +18,31 @@ public class LoginPage extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JButton loginButton = new JButton("Á¬½Ó");
+	private JButton loginButton = new JButton("è¿æ¥");
 	
-	private JButton exitButton = new JButton("ÍË³ö");
+	private JButton exitButton = new JButton("é€€å‡º");
 	
-	private JButton registButton = new JButton("×¢²á");
+	private JButton registButton = new JButton("æ³¨å†Œ");
 	
-	private JTextField nameText = new JTextField();//µÇÂ¼ÊäÈë¿ò
+	private JTextField nameText = new JTextField();//ç™»å½•è¾“å…¥æ¡†
 	
-	private JPasswordField passwordText = new JPasswordField();//ÃÜÂëÊäÈë¿ò
+	private JPasswordField passwordText = new JPasswordField();//å¯†ç è¾“å…¥æ¡†
 	
-	private MainPage mainPage;//Ö÷Òª¹¦ÄÜÒ³Ãæ
+	private MainPage mainPage;//ä¸»è¦åŠŸèƒ½é¡µé¢
 	
 	private RegistePage registPage;
 
 	public void init() {
-		mainPage = VillageManageApplication.mainPage;//Ö÷Òª¹¦ÄÜÒ³Ãæ
+		mainPage = VillageManageApplication.mainPage;//ä¸»è¦åŠŸèƒ½é¡µé¢
 		registPage = VillageManageApplication.registePage;
 	}
 	
 	public LoginPage() {
-		setTitle("ÖÇÄÜĞ¡Çø°²È«ÏµÍ³");
+		setTitle("æ™ºèƒ½å°åŒºå®‰å…¨ç³»ç»Ÿ");
 		setLayout(null);
-		JLabel lblLogin1=new JLabel("ÓÃ»§Ãû:");
+		JLabel lblLogin1=new JLabel("ç”¨æˆ·å:");
 		
-		JLabel lblPassword=new JLabel("ÃÜ Âë:");
+		JLabel lblPassword=new JLabel("å¯† ç :");
 		
 		setSize(400,200);
 		setLocation(300,200);
@@ -53,7 +53,7 @@ public class LoginPage extends JFrame implements ActionListener{
 		loginButton.setBounds(65,100,80,20);
 		exitButton.setBounds(152,100,80,20);
 		registButton.setBounds(240,100,80,20);
-		loginButton.addActionListener(this);//Ìí¼Óµã»÷ÊÂ¼ş´¦Àí
+		loginButton.addActionListener(this);//æ·»åŠ ç‚¹å‡»äº‹ä»¶å¤„ç†
 		exitButton.addActionListener(this);
 		registButton.addActionListener(this);
 		add(lblLogin1);
@@ -63,7 +63,7 @@ public class LoginPage extends JFrame implements ActionListener{
 		add(loginButton);
 		add(exitButton);
 		add(registButton);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//ÉèÖÃ¹Ø±Õ¶¯×÷
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//è®¾ç½®å…³é—­åŠ¨ä½œ
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class LoginPage extends JFrame implements ActionListener{
 				nameText.setText("");
 				passwordText.setText("");
 			} else {
-				JOptionPane.showMessageDialog(this, "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡ µÇÂ¼Ê§°Ü£¡");
+				JOptionPane.showMessageDialog(this, "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼ ç™»å½•å¤±è´¥ï¼");
 			}
 		} else if (e.getSource() == exitButton){
 			System.exit(0);
