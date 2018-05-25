@@ -172,6 +172,27 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	@Override
+	public int resetPassword(String name, String oldPass, String newPass) {
+		session = MyBatisUtil.getSession();
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		User u = null;
+		try {
+			//调用mapper的方法获取user对象比较密码是否一致
+			u = mapper.selectUserByName(name);
+			if(u!=null && u.getPassword().equals(StringUtils.encode(oldPass+u.getToken())))
+			{
+				u.setPassword(StringUtils.encode(newPass + u.getToken()));
+				return mapper.updateUserById(u);
+			}else{
+				return 0;
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	
 	
 }

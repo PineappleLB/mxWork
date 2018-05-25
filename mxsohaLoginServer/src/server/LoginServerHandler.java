@@ -82,6 +82,9 @@ public class LoginServerHandler extends SimpleChannelInboundHandler<String>{
 			else if(orderProps.getProperty("replaceHost").equals(order)) {
 				replaceLobbyHost(context, obj);
 			}
+			else if(orderProps.getProperty("userResetPassword").equals(order)) {
+				resetPassword(context, obj);
+			}
 			else{
 				throw new Exception("错误的请求命令:"+order);
 			}
@@ -96,6 +99,25 @@ public class LoginServerHandler extends SimpleChannelInboundHandler<String>{
 			obj.put("message", e.getMessage());
 			writeAndFlush(context, obj.toString());
 		}
+	}
+
+	/**
+	 * 用户修改密码
+	 * @param context
+	 * @param obj
+	 */
+	private void resetPassword(ChannelHandlerContext context, JSONObject obj) {
+		String name = obj.getString("name");
+		String oldPass = obj.getString("oldPass");
+		String newPass = obj.getString("newPass");
+		int result = service.resetPassword(name, oldPass, newPass);
+		obj = new JSONObject();
+		if(result > 0) {
+			obj.put("order", "success");
+		} else {
+			obj.put("order", "error");
+		}
+		writeAndFlush(context, obj.toString());
 	}
 
 	/**

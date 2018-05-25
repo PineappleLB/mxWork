@@ -81,6 +81,13 @@ public interface UserMapper {
 	 * @return
 	 */
 	Promoter selectPromoterByName(@Param(value="name")String name);
+
+	/**
+	 * 更新user信息
+	 * @param u
+	 * @return
+	 */
+	int updateUserById(User u);
 	
 	
 }

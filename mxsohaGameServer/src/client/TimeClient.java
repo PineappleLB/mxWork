@@ -1,8 +1,6 @@
 package client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -10,11 +8,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import net.sf.json.JSONObject;
-import utils.IcssStringDecoder;
-import utils.IcssStringEncoder;
+import utils.ByteArrayTemplate;
 
 /**
  * @author pineapple
@@ -39,10 +36,10 @@ public class TimeClient {
                         	ch.pipeline().addLast(new IdleStateHandler(5,5,10));
                         	
                         	
-                        	ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024*8, false, new ByteBuf[] {
-                                    Unpooled.wrappedBuffer(new byte[]{03}) }));
-                        	ch.pipeline().addLast(new IcssStringDecoder());
-                        	ch.pipeline().addLast(new IcssStringEncoder());
+//                        	ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024*8, false, new ByteBuf[] {
+//                                    Unpooled.wrappedBuffer(new byte[]{03}) }));
+                        	ch.pipeline().addLast(new StringDecoder());
+                        	ch.pipeline().addLast(new StringEncoder());
                         	
                             ch.pipeline().addLast(new TimeClientHandler());
                         }
@@ -50,18 +47,18 @@ public class TimeClient {
             
             //绑定端口, 异步连接操作
             ChannelFuture future = client.connect(host, port).sync();
-            JSONObject arr = new JSONObject();
-            
-        	arr.put("order", "gc");
-        	arr.put("id", "100001");
-        	arr.put("room", "1");
-        	arr.put("score", "20");
-//        	arr.put("score", "30");
+//            JSONObject arr = new JSONObject();
+//            
+//        	arr.put("order", "gc");
+//        	arr.put("id", "100001");
 //        	arr.put("room", "1");
-//        	arr.put("card1", "55");
-//        	arr.put("card2", "77");
+//        	arr.put("score", "20");
+////        	arr.put("score", "30");
+////        	arr.put("room", "1");
+////        	arr.put("card1", "55");
+////        	arr.put("card2", "77");
         	System.out.println("开始写数据："+System.currentTimeMillis());
-            future.channel().writeAndFlush(arr.toString());
+            future.channel().writeAndFlush(new ByteArrayTemplate().getArray());
             
             //等待客户端连接端口关闭
             future.channel().closeFuture().sync();

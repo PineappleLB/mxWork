@@ -46,6 +46,11 @@
 		select id, name, password, token, parentId, balance, logTime from promoters where name=#{name}
 	</select>
 	
-	
+	<update id="updateUserById" parameterType="model.User">
+	UPDATE users SET
+	username = #{username}, `password` = #{password}, token = #{token}, ip = #{ip}, phone = #{phone}, money = #{money},
+	`status` = #{status}, lastPlayTime = #{lastPlayTime}, staySeatTime = #{staySeatTime}, InvitationCode = #{invitationCode},
+	beInvited = #{beInvited} WHERE id = #{id};
+	</update>
 	
 </mapper>

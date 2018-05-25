@@ -165,7 +165,10 @@ public class SeatServiceImpl implements SeatService {
 				return jedis.lindex("poolScore", seatId);
 			}
 		});
+		if(str == null)
+			return new int[4];
 		JSONObject obj = JSONObject.fromObject(str);
+		
 		int K4 = obj.getInt("4K");
 		int SF = obj.getInt("SF");
 		int RS = obj.getInt("RS");

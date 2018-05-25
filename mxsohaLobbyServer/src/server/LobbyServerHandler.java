@@ -337,7 +337,7 @@ public class LobbyServerHandler extends SimpleChannelInboundHandler<String>  {
 		if(seat==null){
 			throw new IllegalArgumentException("参数错误，没有找到该座位信息：id-"+num);
 		}
-		if(seat.getSeatStatus()==2&&num!=seat.getId()) {
+		if(seat.getSeatStatus()==2&&num==seat.getId()) {
 			throw new IllegalArgumentException("参数错误，您不能进入其他用户正在留机的座位哦！");
 		}
 		

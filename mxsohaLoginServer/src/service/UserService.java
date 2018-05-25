@@ -65,5 +65,14 @@ public interface UserService {
 	 * @return
 	 */
 	Promoter promLogin(String name, String pass);
+
+	/**
+	 * 修改密码
+	 * @param name
+	 * @param oldPass
+	 * @param newPass
+	 * @return
+	 */
+	int resetPassword(String name, String oldPass, String newPass);
 	
 }
