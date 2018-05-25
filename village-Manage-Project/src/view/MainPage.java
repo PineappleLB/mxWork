@@ -16,8 +16,12 @@ public class MainPage extends JFrame{
 	private static final long serialVersionUID = 1L;
 
 
+	public void init() {
+		
+	}
+	
 	public MainPage() {
-		this.setName("智能小区安全系统");
+		setTitle("智能小区安全系统");
 		setSize(300,300);
 		setLocation(450,200);
 		JPanel pLeft=new JPanel();
@@ -33,13 +37,7 @@ public class MainPage extends JFrame{
 		pLeft.add(btnfunction1);
 		pLeft.add(btnfunction2);
 		pLeft.add(btnfunction3);
-		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置关闭动作
 	}
 	
-	
-	public static void main(String[] args){
-		new MainPage();
-		
-	}
-
 }
