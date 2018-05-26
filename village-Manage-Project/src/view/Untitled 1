@@ -1,152 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package view;
-
-import java.awt.Cursor;
-import java.awt.TrayIcon.MessageType;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import javax.swing.WindowConstants;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-
-import jdbc.JDBCUtil;
-import model.WarningConfig;
-
-/**
- *
- * @author Administrator
- */
-public class MainPage extends JFrame {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
- // Variables declaration - do not modify          
-    private JLabel jLabel1 = new JLabel("业主id：");
-    private JLabel jLabel10 = new JLabel();
-    private JLabel jLabel11 = new JLabel();
-    private JLabel jLabel12 = new JLabel();
-    private JLabel jLabel13 = new JLabel();
-    private JLabel jLabel14 = new JLabel();
-    private JLabel jLabel2 = new JLabel("警报项：");
-    private JLabel jLabel3 = new JLabel("值：");
-    private JLabel jLabel4 = new JLabel("单元号：");
-    private JLabel jLabel6 = new JLabel();
-    private JLabel jLabel7 = new JLabel();
-    private JLabel jLabel8 = new JLabel();
-    private JLabel jLabel9 = new JLabel();
-    private JTable jTable = new JTable();
-    
-    private JButton aCancelButton = new JButton();//存储页面取消按钮
-    private JButton aOKButton = new JButton(); //存储页面确认按钮
-    private JButton sSelectButton = new JButton(); //查询页面查询按钮
-    private JButton uCancelButton = new JButton("取消修改"); //信号处理页面取消按钮
-    private JButton uOKButton = new JButton("确认修改"); //信号处理页面确认按钮
-    
-    private JFormattedTextField aAlertTypeTextField = new JFormattedTextField(); //存储页面时间格式化字段
-    private JFormattedTextField aValueTextFiled = new JFormattedTextField(); // 存储页面值输入字段
-    private JFormattedTextField uValueTextFiled = new JFormattedTextField(); // 信号处理页面值输入字段   
-    private JScrollPane jScrollPane = new JScrollPane();
-    
-    //查询页面
-    private JComboBox<String> sAlertTypeSelect = new JComboBox<>(); //警报类型选项框
-    private JComboBox<String> sRoomSelect = new JComboBox<>();		//房间号选项框
-    private JComboBox<String> sUnitSelect = new JComboBox<>();		//单元号选项框
-    private JComboBox<String> sUserSelect = new JComboBox<>();		//业主id选项框
-    //信号处理页面
-    private JComboBox<String> uAlertTypeSelect = new JComboBox<>(); //警报类型选项框
-    private JComboBox<String> uUnitSelect = new JComboBox<>();		//单元号选项框
-    private JComboBox<String> uUserIdSelect = new JComboBox<>();	//业主id选项框
-    //信号存储页面
-    private JComboBox<String> aUnitSelect = new JComboBox<>();		//单元号选项框
-    private JComboBox<String> aUserSelect = new JComboBox<>();		//业主id选项框
-    private JComboBox<String> aAlertTypeSelect = new JComboBox<>();//警报类型选项框
-    
-    private JInternalFrame updateInfoInFrame = new JInternalFrame();	//信号处理页面
-    private JInternalFrame selectInfoInFrame = new JInternalFrame();	//查询信号页面
-    private JInternalFrame addInfoInFrame = new JInternalFrame();		//存储信号页面
-    
-    private JMenuBar topMenu = new JMenuBar();					//顶部导航栏
-    private JMenuItem selectInfoMenuItem = new JMenuItem();			//查询警报选项
-    private JMenuItem updateInfoMenuItem = new JMenuItem();			//信号处理选项
-    private JMenuItem addInfoMenuItem = new JMenuItem();				//存储信号选项
-//    private 
-    // End of variables declaration               
-    
-    public void init() {
-    	
-    }
-    
-    /**
-     * Creates new form NewJFrame
-     */
-    public MainPage() {
-        initComponents();
-        updateInfoMenuItemActionPerformed(null);
-    }
-    
-    private void initComponents() {
-        //信号处理菜单项点击事件
-		updateInfoMenuItem.addActionListener((evt) -> {
-			updateInfoMenuItemActionPerformed(evt);
-		});
-		 //信号存储菜单项点击事件
-		addInfoMenuItem.addActionListener((evt) -> {
-			addInfoMenuItemActionPerformed(evt);
-		});
-		 //信号查询菜单项点击事件
-		selectInfoMenuItem.addActionListener((evt) -> {
-			selectInfoMenuItemActionPerformed(evt);
-		});
-        
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        updateInfoInFrame.setTitle("信号处理");
-        updateInfoInFrame.setToolTipText("");
-        updateInfoInFrame.setVisible(true);
-
-        uUserIdSelect.addActionListener((evt) -> {
-            uUserIdSelectActionPerformed(evt);
-        });
-        uOKButton.addActionListener((evt) -> {
-            uOKButtonActionPerformed(evt);
-        });
-        uUnitSelect.addActionListener((evt) -> {
-        	uUnitSelectActionPerformed(evt);
-        });
-        //单元号下拉框改变时自动改变业主选项
-        uUnitSelect.addItemListener((e) -> {
-        	if(e.getStateChange() == ItemEvent.SELECTED) {
-        		uUnitSelectItemChangePerformed(e);
-        	}
-        });
-        
-         GroupLayout updateInfoInFrameLayout = new GroupLayout(updateInfoInFrame.getContentPane());
+GroupLayout updateInfoInFrameLayout = new GroupLayout(updateInfoInFrame.getContentPane());
         updateInfoInFrame.getContentPane().setLayout(updateInfoInFrameLayout);
         updateInfoInFrameLayout.setHorizontalGroup(
             updateInfoInFrameLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -235,10 +87,8 @@ public class MainPage extends JFrame {
 
         jLabel10.setText("警报时间：");
 
-        aAlertTypeTextField.setFormatterFactory(new DefaultFormatterFactory(new DateFormatter(DateFormat.getTimeInstance())));
-        aValueTextFiled.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getNumberInstance())));
-        uValueTextFiled.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getNumberInstance())));
-        
+        aAlertTypeTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance())));
+
         GroupLayout addInfoInFrameLayout = new GroupLayout(addInfoInFrame.getContentPane());
         addInfoInFrame.getContentPane().setLayout(addInfoInFrameLayout);
         addInfoInFrameLayout.setHorizontalGroup(
@@ -338,7 +188,9 @@ public class MainPage extends JFrame {
                 "警报类型", "时间", "范围", "警报值", "业主id"
             }
         ) {
-           
+            /**
+			 * 
+			 */
 			private static final long serialVersionUID = 1L;
 			Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
@@ -436,101 +288,3 @@ public class MainPage extends JFrame {
             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(selectInfoInFrame, GroupLayout.Alignment.TRAILING))
         );
-         
-        //TODO
-        setResizable(false);
-        pack();
-    }// </editor-fold>                        
-
-    private void uUnitSelectItemChangePerformed(ItemEvent e) {
-    	int unit = Integer.parseInt(uUnitSelect.getSelectedItem().toString().substring(0, 1));
-		String[] strs = JDBCUtil.selectUsernamesByUnit(unit);
-		uUserIdSelect.setModel(new DefaultComboBoxModel<>(strs));
-	}
-
-	private void selectInfoMenuItemActionPerformed(ActionEvent evt) {
-    	addInfoInFrame.setVisible(false);
-		updateInfoInFrame.setVisible(false);
-		selectInfoInFrame.setVisible(true);
-	}
-
-	private void addInfoMenuItemActionPerformed(ActionEvent evt) {
-    	selectInfoInFrame.setVisible(false);
-		updateInfoInFrame.setVisible(false);
-		addInfoInFrame.setVisible(true);
-	}
-
-	private void updateInfoMenuItemActionPerformed(ActionEvent evt) {                                                   
-    	selectInfoInFrame.setVisible(false);
-		updateInfoInFrame.setVisible(true);
-		addInfoInFrame.setVisible(false);
-		String[] uUnitStrs = JDBCUtil.selectUnits();
-		uUnitSelect.setModel(new DefaultComboBoxModel<>(uUnitStrs));
-		uUnitSelectItemChangePerformed(null);
-		String[] uAlertStrs = JDBCUtil.selectAlertItems();
-		uAlertTypeSelect.setModel(new DefaultComboBoxModel<>(uAlertStrs));
-    }                                                  
-
-    private void uUserIdSelectActionPerformed(ActionEvent evt) {                                              
-       
-    }                                             
-
-    /**
-     * 信号处理
-     * @param evt
-     */
-    private void uOKButtonActionPerformed(ActionEvent evt) {                                          
-    	int value = Integer.parseInt(uValueTextFiled.getValue().toString());
-    	String alertItem = uAlertTypeSelect.getSelectedItem().toString();
-    	String username = uUserIdSelect.getSelectedItem().toString();
-    	WarningConfig config = JDBCUtil.selectWarningConfigByUsername(username, alertItem);
-    	if(config != null) {
-    		if(value > config.getSafemax()) {
-    			JOptionPane.showMessageDialog(this, alertItem + "值大于了安全警报！", "警告", JOptionPane.WARNING_MESSAGE);
-    			saveWarningMessage(username, alertItem, value);
-    		}
-    		else if(value < config.getSafemin()) {
-    			JOptionPane.showMessageDialog(this, alertItem + "值小于了安全警报！", "警告", JOptionPane.WARNING_MESSAGE);
-    			saveWarningMessage(username, alertItem, value);
-    		}
-    		else {
-    			JOptionPane.showMessageDialog(this, "修改成功！");
-    		}
-    	}
-    	
-    }                                                                    
-
-    /**
-     * 有警报时保存改警报信息
-     * @param username
-     * @param alertItem
-     * @param value
-     */
-    private void saveWarningMessage(String username, String alertItem, int value) {
-		JDBCUtil.saveWarningMessage(username, alertItem, value);
-	}
-
-	private void aUserSelectActionPerformed(ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
-
-    private void aOKButtonActionPerformed(ActionEvent evt) {                                          
-        // TODO add your handling code here:
-    }                                         
-
-    private void aCancelButtonActionPerformed(ActionEvent evt) {                                              
-        // TODO add your handling code here:
-    }                                             
-
-    private void uUnitSelectActionPerformed(ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-    	new MainPage().setVisible(true);
-    }
-
-}

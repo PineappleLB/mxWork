@@ -71,7 +71,7 @@ public class LoginPage extends JFrame implements ActionListener{
 		if(e.getSource() == loginButton) {
 			String name = nameText.getText();
 			String pass = new String(passwordText.getPassword());
-			int result = JDBCUtil.userLogin(name, pass);
+			int result = JDBCUtil.adminLogin(name, pass);
 			if(result > 0) {
 				this.setVisible(false);
 				mainPage.setVisible(true);

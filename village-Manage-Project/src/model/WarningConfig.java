@@ -3,13 +3,13 @@ package model;
 public class WarningConfig {
     private Integer id;
 
-    private Integer alertname;
+    private String alertname;
 
     private Integer safemin;
 
     private Integer safemax;
 
-    private Integer userid;
+    private String username;
 
     public Integer getId() {
         return id;
@@ -19,11 +19,11 @@ public class WarningConfig {
         this.id = id;
     }
 
-    public Integer getAlertname() {
+    public String getAlertname() {
         return alertname;
     }
 
-    public void setAlertname(Integer alertname) {
+    public void setAlertname(String alertname) {
         this.alertname = alertname;
     }
 
@@ -43,11 +43,11 @@ public class WarningConfig {
         this.safemax = safemax;
     }
 
-    public Integer getUserid() {
-        return userid;
+    public String getUserid() {
+        return username;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String username) {
+        this.username = username;
     }
 }

@@ -73,7 +73,7 @@ public class RegistePage extends JFrame implements ActionListener{
 		} else if(e.getSource() == registButton) {
 			String name = nameText.getText();
 			String pass = new String(passwordText.getPassword());
-			int result = JDBCUtil.userRegist(name, pass);
+			int result = JDBCUtil.adminRegist(name, pass);
 			if(result > 0) {
 				int i = JOptionPane.showConfirmDialog(this, "注册成功，是否跳转到登录界面？");
 				if(i == JOptionPane.OK_OPTION) {
