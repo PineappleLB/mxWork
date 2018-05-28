@@ -142,6 +142,8 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 		clientIP = ctx.channel().remoteAddress().toString();
 		logger.info(clientIP+"请求游戏链接成功");
 		
+		
+		
 	}
 	
 	@Override

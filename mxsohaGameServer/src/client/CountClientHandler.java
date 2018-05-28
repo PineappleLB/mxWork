@@ -1,30 +1,47 @@
 package client;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import net.sf.json.JSONObject;
+import server.GameServerHandler;
 
 /**
  * @author pineapple
  * @date 2017年12月26日 下午1:31:13
  * @description xxx
  */
-public class TimeClientHandler2 extends  SimpleChannelInboundHandler<String>{
+public class CountClientHandler extends  ChannelInboundHandlerAdapter{
 	
-
-
-
+	public CountClientHandler() {}
+	public CountClientHandler(GameServerHandler handler) {
+		this.gameHandler = handler;
+	}
+	
+	private GameServerHandler gameHandler;
+	
+	private ChannelHandlerContext context;
+	
+	
+	
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-    	System.out.println("我收到了服务器端发送的数据"+System.currentTimeMillis());
-        System.out.println("NOW is: " + msg.toString());
-        
-        
-        
-//        ctx.write();
-        
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		this.context = ctx;
+	}
+
+    
+    
+    
+	@Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    	ByteBuf buf = (ByteBuf)msg;
+    	if(!buf.hasArray()){   
+    	    int len = buf.readableBytes();   
+    	    byte[] arr = new byte[len];   
+    	    buf.getBytes(0, arr);
+    	}  
     }
 
     @Override

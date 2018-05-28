@@ -60,6 +60,10 @@ public class Configs {
 	public static int seatNum;
 	
 	public static int roomNum;
+	/** 算法服务器ip */
+	public static String countServerIp;
+	/** 算法服务器端口 */
+	public static int countServerPort;
 	
 	/**
 	 * 随机牌的json文件路径
@@ -90,6 +94,8 @@ public class Configs {
 			min_RS=Integer.parseInt(configProps.getProperty("min_RS"));
 			seatNum = Integer.parseInt(configProps.getProperty("seat.num"));
 			roomNum = Integer.parseInt(configProps.getProperty("roomNum"));
+			countServerIp = configProps.getProperty("countServerIp", "127.0.0.1");
+			countServerPort = Integer.parseInt(configProps.getProperty("countServerPort"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
