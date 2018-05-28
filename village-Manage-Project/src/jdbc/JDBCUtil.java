@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import model.Admin;
@@ -151,7 +150,7 @@ public class JDBCUtil {
 		try {
 			conn = Jdbc.getMyConnection();
 			sql = "SELECT warningConfig.id, alertSelection.alertName, safeMin, safeMax, `NAME` FROM warningConfig "
-				+ "LEFT JOIN USER ON user.id=userId LEFT JOIN alertSelection ON alertSelection.id=warningConfig.alertName"
+				+ "LEFT JOIN `USER` ON user.id=userId LEFT JOIN alertSelection ON alertSelection.id=warningConfig.alertName "
 				+ "WHERE alertSelection.alertName = ? AND `NAME` = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, alertItem);
