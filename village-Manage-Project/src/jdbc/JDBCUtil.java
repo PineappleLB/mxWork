@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Admin;
@@ -104,10 +105,16 @@ public class JDBCUtil {
 	public static String[] selectUsernamesByUnit(int unit) {
 		try {
 			conn = Jdbc.getMyConnection();
-			sql = "SELECT `NAME` FROM `USER` WHERE unit = ?;";
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, unit);
-			rs = stmt.executeQuery();
+			sql = "SELECT `NAME` FROM `USER`";
+			if(unit > 0) {
+				sql += " WHERE unit = ?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, unit);	
+				rs = stmt.executeQuery();
+			} else {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				rs = stmt.executeQuery();
+			}
 			List<String> strs = new ArrayList<>();
 			while(rs.next()) {
 				strs.add(rs.getString("name"));
@@ -182,6 +189,123 @@ public class JDBCUtil {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	public static int saveWarningMessage(String username, String alertItem, int value, String date) {
+		try {
+			conn = Jdbc.getMyConnection();
+			sql = "INSERT INTO alertInfo(alertName, `TIME`, safeMin, safeMax, userId,VALUE) " + 
+					"SELECT DISTINCT alertName, ?,safeMin,safeMax,userId,? FROM `USER` LEFT JOIN warningConfig ON warningConfig.userId=user.id " + 
+					"WHERE warningConfig.alertName=(SELECT id FROM alertSelection WHERE alertName= ? ) " + 
+					"AND user.id=(SELECT id FROM `USER` WHERE user.name= ? )";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, date);
+			stmt.setInt(2, value);
+			stmt.setString(3, alertItem);
+			stmt.setString(4, username);
+			return stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static String selectRoomByUsername(String username) {
+		try {
+			conn = Jdbc.getMyConnection();
+			sql = "SELECT room FROM `USER` WHERE `NAME` = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				return rs.getString("room");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String[] selectRoomsByUnit(int unit) {
+		try {
+			conn = Jdbc.getMyConnection();
+			sql = "SELECT room FROM `USER`";
+			if(unit > 0) {
+				sql += " WHERE unit = ?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, unit);	
+				rs = stmt.executeQuery();
+			} else {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				rs = stmt.executeQuery();
+			}
+			List<String> strs = new ArrayList<>();
+			while(rs.next()) {
+				strs.add(rs.getString("room"));
+			}
+			String []arr = new String[strs.size()];
+			strs.toArray(arr);
+			return arr;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String selectUsernameByRoom(String room) {
+		try {
+			conn = Jdbc.getMyConnection();
+			sql = "SELECT `NAME` FROM `USER` WHERE room = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, room);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				return rs.getString("name");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Object[][] selectAlertTableModels(String username, String alertType) {
+		try {
+			conn = Jdbc.getMyConnection();
+			sql = "SELECT alertSelection.alertName as alertType,`TIME`,safeMin,safeMax,`VALUE`,`NAME` FROM alertInfo " + 
+					"LEFT JOIN alertSelection ON alertInfo.alertName=alertSelection.id LEFT JOIN `USER` ON user.id=alertInfo.userId" + 
+					" WHERE user.id IN (SELECT id FROM `USER` WHERE `NAME`=?)";
+			//alertSelection.alertName=? AND 
+			if("任意".equals(alertType)) {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+//				stmt.setString(1, alertType);
+				stmt.setString(1, username);
+				rs = stmt.executeQuery();
+			} else {
+				sql += " AND alertSelection.alertName=?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, username);
+				stmt.setString(2, alertType);
+				rs = stmt.executeQuery();
+			}
+			List<Object[]> list = new ArrayList<>();
+			while(rs.next()) {
+				Object[] objs = new Object[5];
+				objs[0] = rs.getString("alertType");
+				objs[1] = rs.getString("time");
+				objs[2] = rs.getInt("safeMin") + "-" + rs.getInt("safeMax");
+				objs[3] = rs.getInt("value");
+				objs[4] = rs.getString("name");
+				list.add(objs);
+			}
+			if(list.size() > 0 && list.get(0) != null && list.get(0).length > 0) {
+				Object[][] returnObjs = new Object[list.size()][list.get(0).length];
+				list.toArray(returnObjs);
+				return returnObjs;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	

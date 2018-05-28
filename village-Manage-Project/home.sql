@@ -51,7 +51,7 @@ CREATE TABLE `alertinfo` (
   KEY `alertName` (`alertName`),
   CONSTRAINT `alertName` FOREIGN KEY (`alertName`) REFERENCES `alertselection` (`id`),
   CONSTRAINT `fk_user` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Data for the table `alertinfo` */
 
@@ -59,7 +59,10 @@ insert  into `alertinfo`(`id`,`alertName`,`time`,`safeMin`,`safeMax`,`userId`,`v
 (1,2,'2018-05-26 18:36:09',10,20,1,0),
 (2,2,'2018-05-26 18:36:09',10,20,2,0),
 (4,2,'2018-05-26 18:37:22',10,20,1,0),
-(5,2,'2018-05-26 18:41:41',10,20,1,10);
+(5,2,'2018-05-26 18:41:41',10,20,1,10),
+(6,2,'2018-05-26 16:36:09',10,20,1,10),
+(7,2,'2018-01-25 12:00:00',10,20,1,1),
+(8,1,'2018-05-28 14:49:15',20,30,1,35);
 
 /*Table structure for table `alertselection` */
 

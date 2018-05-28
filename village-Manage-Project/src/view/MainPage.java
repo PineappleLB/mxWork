@@ -6,11 +6,10 @@
 package view;
 
 import java.awt.Cursor;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -25,9 +24,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
@@ -95,6 +94,14 @@ public class MainPage extends JFrame {
     private JMenuItem selectInfoMenuItem = new JMenuItem();			//查询警报选项
     private JMenuItem updateInfoMenuItem = new JMenuItem();			//信号处理选项
     private JMenuItem addInfoMenuItem = new JMenuItem();				//存储信号选项
+    
+    //------------------------------需要使用的数据属性------------------------------------------------
+    private String[] units;		//单元下拉选项
+    private String[] alertTypes;//警报下拉选项
+    
+    
+    
+    //------------------------------end------------------------------------------------
 //    private 
     // End of variables declaration               
     
@@ -106,12 +113,15 @@ public class MainPage extends JFrame {
      * Creates new form NewJFrame
      */
     public MainPage() {
+    	this.units = JDBCUtil.selectUnits();
+		this.alertTypes = JDBCUtil.selectAlertItems();
         initComponents();
         updateInfoMenuItemActionPerformed(null);
     }
     
     private void initComponents() {
-        //信号处理菜单项点击事件
+        setLocation(500, 300);
+    	//信号处理菜单项点击事件
 		updateInfoMenuItem.addActionListener((evt) -> {
 			updateInfoMenuItemActionPerformed(evt);
 		});
@@ -130,11 +140,11 @@ public class MainPage extends JFrame {
         updateInfoInFrame.setToolTipText("");
         updateInfoInFrame.setVisible(true);
 
-        uUserIdSelect.addActionListener((evt) -> {
-            uUserIdSelectActionPerformed(evt);
-        });
         uOKButton.addActionListener((evt) -> {
             uOKButtonActionPerformed(evt);
+        });
+        uCancelButton.addActionListener((evt) -> {
+        	uCancelButtonActionPerformed(evt);
         });
         uUnitSelect.addActionListener((evt) -> {
         	uUnitSelectActionPerformed(evt);
@@ -142,8 +152,22 @@ public class MainPage extends JFrame {
         //单元号下拉框改变时自动改变业主选项
         uUnitSelect.addItemListener((e) -> {
         	if(e.getStateChange() == ItemEvent.SELECTED) {
-        		uUnitSelectItemChangePerformed(e);
+        		unitSelectItemChangePerformed(e, uUnitSelect, uUserIdSelect);
         	}
+        });
+        sUserSelect.addItemListener((e) -> {
+        	userSelectItemChangePerformed(e, sUserSelect, sRoomSelect);
+        });
+        sRoomSelect.addItemListener((e) -> {
+        	roomSelectItemChangePerformed(e, sRoomSelect, sUserSelect);
+        });
+        aUnitSelect.addItemListener((evt) -> {
+        	if(evt.getStateChange() == ItemEvent.SELECTED) {
+        		unitSelectItemChangePerformed(evt, aUnitSelect, aUserSelect);
+        	}
+        });
+        sSelectButton.addActionListener((e) -> {
+        	sSelectButtonActionPerformed(e);
         });
         
          GroupLayout updateInfoInFrameLayout = new GroupLayout(updateInfoInFrame.getContentPane());
@@ -235,7 +259,7 @@ public class MainPage extends JFrame {
 
         jLabel10.setText("警报时间：");
 
-        aAlertTypeTextField.setFormatterFactory(new DefaultFormatterFactory(new DateFormatter(DateFormat.getTimeInstance())));
+        aAlertTypeTextField.setFormatterFactory(new DefaultFormatterFactory(new DateFormatter(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"))));
         aValueTextFiled.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getNumberInstance())));
         uValueTextFiled.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getNumberInstance())));
         
@@ -311,23 +335,23 @@ public class MainPage extends JFrame {
 
         jLabel11.setText("单元号：");
 
-        sUnitSelect.setModel(new DefaultComboBoxModel<>(new String[] { "任意" }));
+        sUnitSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
 
         jLabel12.setText("业主id：");
 
-        sUserSelect.setModel(new DefaultComboBoxModel<>(new String[] { "任意" }));
+        sUserSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
 
         jLabel13.setText("门牌号：");
 
-        sRoomSelect.setModel(new DefaultComboBoxModel<>(new String[] { "任意" }));
+        sRoomSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
 
         jLabel14.setText("警报类型：");
 
-        sAlertTypeSelect.setModel(new DefaultComboBoxModel<>(new String[] { "任意" }));
+        sAlertTypeSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
 
         sSelectButton.setText("查询");
 
-        jTable.setModel(new javax.swing.table.DefaultTableModel(
+        jTable.setModel(new DefaultTableModel(
             new Object [][] {
                 {"", "", "", "", ""},
                 {"", "", "", "", ""},
@@ -362,7 +386,7 @@ public class MainPage extends JFrame {
         selectInfoInFrameLayout.setHorizontalGroup(
             selectInfoInFrameLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(selectInfoInFrameLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel11)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sUnitSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -370,17 +394,17 @@ public class MainPage extends JFrame {
                 .addComponent(jLabel12)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sUserSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel13)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sRoomSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel14)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sAlertTypeSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addComponent(sSelectButton)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
             .addComponent(jScrollPane, GroupLayout.Alignment.TRAILING)
         );
         selectInfoInFrameLayout.setVerticalGroup(
@@ -442,38 +466,151 @@ public class MainPage extends JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void uUnitSelectItemChangePerformed(ItemEvent e) {
-    	int unit = Integer.parseInt(uUnitSelect.getSelectedItem().toString().substring(0, 1));
-		String[] strs = JDBCUtil.selectUsernamesByUnit(unit);
-		uUserIdSelect.setModel(new DefaultComboBoxModel<>(strs));
+    /**
+     * 查询页面查询按钮点击事件
+     * @param e
+     */
+    private void sSelectButtonActionPerformed(ActionEvent e) {
+		String username = sUserSelect.getSelectedItem().toString();
+		String alertType = sAlertTypeSelect.getSelectedItem().toString();
+		Object[][] tableModel = JDBCUtil.selectAlertTableModels( username, alertType);
+		
+		//TODO
+		jTable.setModel(new DefaultTableModel(
+				tableModel,
+	            new String [] {
+	                "警报类型", "时间", "范围", "警报值", "业主id"
+	            }
+	        ) {
+	           
+				private static final long serialVersionUID = 1L;
+				Class[] types = new Class [] {
+	                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+	            };
+	            boolean[] canEdit = new boolean [] {
+	                false, false, false, false, false
+	            };
+
+	            public Class getColumnClass(int columnIndex) {
+	                return types [columnIndex];
+	            }
+
+	            public boolean isCellEditable(int rowIndex, int columnIndex) {
+	                return canEdit [columnIndex];
+	            }
+	        });
 	}
 
+	/**
+     * 取消按钮点击
+     * @param evt
+     */
+    private void uCancelButtonActionPerformed(ActionEvent evt) {
+    	uAlertTypeSelect.setSelectedIndex(0);
+    	uUnitSelect.setSelectedIndex(0);
+    	uValueTextFiled.setValue("0");
+	}
+
+	private void unitSelectItemChangePerformed(ItemEvent e, JComboBox<String> selectJcb, JComboBox<String> jcb) {
+		String selectItem = selectJcb.getSelectedItem().toString();
+		int unit = 0;
+		if("任意".equals(selectItem)) {
+			unit = -1;
+		} else {
+			unit = Integer.parseInt(selectItem.substring(0, 1));
+		}
+		String[] strs = JDBCUtil.selectUsernamesByUnit(unit);
+		jcb.setModel(new DefaultComboBoxModel<>(strs));
+	}
+
+	/**
+	 * 打开信号查询页面
+	 * @param evt
+	 */
 	private void selectInfoMenuItemActionPerformed(ActionEvent evt) {
     	addInfoInFrame.setVisible(false);
 		updateInfoInFrame.setVisible(false);
 		selectInfoInFrame.setVisible(true);
+		sUnitSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
+		sUnitSelect.addItem("任意");
+		for (String string : units) {
+			sUnitSelect.addItem(string);
+		}
+		unitSelectItemChangePerformed(null, sUnitSelect, sUserSelect);
+		unitSelectItemChangeRoomPerfored(null, sUnitSelect, sRoomSelect);
+		userSelectItemChangePerformed(null, sUserSelect, sRoomSelect);
+		roomSelectItemChangePerformed(null, sRoomSelect, sUserSelect);
+		sAlertTypeSelect.setModel(new DefaultComboBoxModel<>(new String[] {}));
+		sAlertTypeSelect.addItem("任意");
+		for (String string : alertTypes) {
+			sAlertTypeSelect.addItem(string);
+		}
 	}
 
+	private void unitSelectItemChangeRoomPerfored(ItemEvent e, JComboBox<String> selectJcb,	JComboBox<String> jcb) {
+		String selectItem = selectJcb.getSelectedItem().toString();
+		int unit = 0;
+		if("任意".equals(selectItem)) {
+			unit = -1;
+		} else {
+			unit = Integer.parseInt(selectItem.substring(0, 1));
+		}
+		String[] strs = JDBCUtil.selectRoomsByUnit(unit);
+		jcb.setModel(new DefaultComboBoxModel<>(strs));
+		
+	}
+
+	private void roomSelectItemChangePerformed(ItemEvent e, JComboBox<String> selectJcb, JComboBox<String> jcb) {
+		String room = selectJcb.getSelectedItem().toString();
+		String name = JDBCUtil.selectUsernameByRoom(room);
+		if(jcb.getSelectedItem().equals(name)) return;
+		int count = jcb.getItemCount();
+		if(name != null)
+		for (int i = 0; i < count; i++) {
+			if(name.equals(jcb.getItemAt(i))) {
+				jcb.setSelectedIndex(i);
+			}
+		}
+	}
+
+	private void userSelectItemChangePerformed(ItemEvent e, JComboBox<String> selectJcb, JComboBox<String> jcb) {
+		String username = selectJcb.getSelectedItem().toString();
+		String room = JDBCUtil.selectRoomByUsername(username);
+		if(jcb.getSelectedItem().equals(room)) return;
+		int count = jcb.getItemCount();
+		if(room != null)
+		for (int i = 0; i < count; i++) {
+			if(room.equals(jcb.getItemAt(i))) {
+				jcb.setSelectedIndex(i);
+			}
+		}
+	}
+
+	/**
+	 * 打开存储信号页面
+	 * @param evt
+	 */
 	private void addInfoMenuItemActionPerformed(ActionEvent evt) {
     	selectInfoInFrame.setVisible(false);
 		updateInfoInFrame.setVisible(false);
 		addInfoInFrame.setVisible(true);
+		aUnitSelect.setModel(new DefaultComboBoxModel<>(units));
+		aAlertTypeSelect.setModel(new DefaultComboBoxModel<>(alertTypes));
+		unitSelectItemChangePerformed(null, aUnitSelect, aUserSelect);
 	}
 
+	/**
+	 * 打开信号处理页面
+	 * @param evt
+	 */
 	private void updateInfoMenuItemActionPerformed(ActionEvent evt) {                                                   
     	selectInfoInFrame.setVisible(false);
 		updateInfoInFrame.setVisible(true);
 		addInfoInFrame.setVisible(false);
-		String[] uUnitStrs = JDBCUtil.selectUnits();
-		uUnitSelect.setModel(new DefaultComboBoxModel<>(uUnitStrs));
-		uUnitSelectItemChangePerformed(null);
-		String[] uAlertStrs = JDBCUtil.selectAlertItems();
-		uAlertTypeSelect.setModel(new DefaultComboBoxModel<>(uAlertStrs));
+		uUnitSelect.setModel(new DefaultComboBoxModel<>(units));
+		unitSelectItemChangePerformed(null, uUnitSelect, uUserIdSelect);
+		uAlertTypeSelect.setModel(new DefaultComboBoxModel<>(alertTypes));
     }                                                  
-
-    private void uUserIdSelectActionPerformed(ActionEvent evt) {                                              
-       
-    }                                             
 
     /**
      * 信号处理
@@ -514,12 +651,32 @@ public class MainPage extends JFrame {
         // TODO add your handling code here:
     }                                           
 
-    private void aOKButtonActionPerformed(ActionEvent evt) {                                          
-        // TODO add your handling code here:
+    private void aOKButtonActionPerformed(ActionEvent evt) {     
+        String username = aUserSelect.getSelectedItem().toString();
+        String alertItem = aAlertTypeSelect.getSelectedItem().toString();
+        String value = aValueTextFiled.getText();
+        if("".equals(value)) {
+        	JOptionPane.showMessageDialog(this, "值不能为空！");
+        	return;
+        }
+        int intValue = Integer.parseInt(value);
+        String time = aAlertTypeTextField.getText();
+        if("".equals(time)) {
+        	JOptionPane.showMessageDialog(this, "时间不能为空！");
+        	return;
+        }
+    	int result = JDBCUtil.saveWarningMessage(username, alertItem, intValue, time);
+    	if(result > 0) {
+    		JOptionPane.showMessageDialog(this, "保存成功！");
+    	}
     }                                         
 
     private void aCancelButtonActionPerformed(ActionEvent evt) {                                              
-        // TODO add your handling code here:
+        aUnitSelect.setSelectedIndex(0);
+//        aUserSelect.setSelectedIndex(0);
+        aAlertTypeSelect.setSelectedIndex(0);
+        aAlertTypeTextField.setText("");
+        aValueTextFiled.setText("");
     }                                             
 
     private void uUnitSelectActionPerformed(ActionEvent evt) {                                            
