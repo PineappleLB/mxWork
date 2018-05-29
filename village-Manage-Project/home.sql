@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `alertinfo`;
 CREATE TABLE `alertinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `alertName` int(2) NOT NULL COMMENT '警报事项',
-  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '警报时间',
+  `time` datetime NOT NULL COMMENT '警报时间',
   `safeMin` int(5) NOT NULL DEFAULT '0' COMMENT '安全最小数值',
   `safeMax` int(5) NOT NULL DEFAULT '0' COMMENT '安全最大数值',
   `userId` int(5) NOT NULL COMMENT '用户关联id',
@@ -51,7 +51,7 @@ CREATE TABLE `alertinfo` (
   KEY `alertName` (`alertName`),
   CONSTRAINT `alertName` FOREIGN KEY (`alertName`) REFERENCES `alertselection` (`id`),
   CONSTRAINT `fk_user` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 /*Data for the table `alertinfo` */
 
@@ -62,7 +62,8 @@ insert  into `alertinfo`(`id`,`alertName`,`time`,`safeMin`,`safeMax`,`userId`,`v
 (5,2,'2018-05-26 18:41:41',10,20,1,10),
 (6,2,'2018-05-26 16:36:09',10,20,1,10),
 (7,2,'2018-01-25 12:00:00',10,20,1,1),
-(8,1,'2018-05-28 14:49:15',20,30,1,35);
+(8,1,'2018-05-28 14:49:15',20,30,1,35),
+(9,2,'2018-05-28 15:31:20',10,20,1,23);
 
 /*Table structure for table `alertselection` */
 
