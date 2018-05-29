@@ -2,6 +2,7 @@ package client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import net.sf.json.JSONObject;
 
 /**
  * @author pineapple
@@ -10,8 +11,23 @@ import io.netty.channel.SimpleChannelInboundHandler;
  */
 public class TimeClientHandler extends  SimpleChannelInboundHandler<String> {
 	
+	
 
     @Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    	JSONObject arr = new JSONObject();
+        
+    	arr.put("order", "gc");
+    	arr.put("id", "100001");
+    	arr.put("room", "1");
+    	arr.put("score", "20");
+    	arr.put("seatId", 0);
+    	ctx.writeAndFlush(arr.toString());
+    	System.out.println("我向服务器发送了一条数据");
+	}
+
+
+	@Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     	
     	cause.printStackTrace();

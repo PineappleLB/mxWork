@@ -11,6 +11,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import client.CountClient;
+import client.CountClientHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
@@ -133,17 +135,22 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 	 */
 	private boolean addScoreLogic = false;
 	
+	public CountClientHandler handler;
+	
 	/**
 	 * 当有客户端注册服务端时触发
 	 */
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
 		clientIP = ctx.channel().remoteAddress().toString();
 		logger.info(clientIP+"请求游戏链接成功");
-		
-		
-		
+		new Thread(() ->{
+			try {
+				new CountClient().connect(Configs.countServerPort, Configs.countServerIp, this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 	
 	@Override
@@ -460,7 +467,10 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 		}
 		byte request[] = request = requestUtil.createRequestMessage(userId,roomId,seatId,score,this);
 		//获取串口的数据，返回牌的类型与比倍的结果，同时更新用户信息表中的payscore字段
-		cardMessage = SerialPortSession.getCardMessage(request, userId, roomId, seatId,score);//发送数据并等待返回数据
+//		cardMessage = SerialPortSession.getCardMessage(request, userId, roomId, seatId,score);//发送数据并等待返回数据
+		
+		//TODO 新的tcp连接模式获取数据
+		cardMessage = handler.sendMessage(request, userId, roomId, seatId,score);
 		
 		int type = CardUtil.selectCardTypeByPower(cardMessage[0]);
 //		int type = (int)(Math.random()*5)+6;
@@ -482,6 +492,8 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 //		obj.put("牌型", type);
 		writeAndFlush(ctx, obj.toString());
 	}
+	
+	
 
 	/**
 	 * 根据座位号判断房间倍率
