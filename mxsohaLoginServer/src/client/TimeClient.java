@@ -48,10 +48,10 @@ public class TimeClient {
             ChannelFuture future = client.connect(host, port).sync();
             JSONObject arr = new JSONObject();
             
-        	arr.put("order", "login");
-        	arr.put("name", "酱油2");
-        	arr.put("pass", "654321");
-//        	arr.put("newPass", "654321");
+        	arr.put("order", "regist");
+        	arr.put("name", "test123");
+        	arr.put("pass", "123456");
+        	arr.put("beInvited", "YfI0ZO");
 //        	arr.put("host", "118.112.108.229");
         	//[1-9][0-9]{0,2}(.[0-9]{0,3}){3}
         	System.out.println("开始写数据："+System.currentTimeMillis());
