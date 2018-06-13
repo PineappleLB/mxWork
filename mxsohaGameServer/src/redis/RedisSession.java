@@ -27,6 +27,13 @@ public class RedisSession {
 			@Override
 			public Integer handle(Jedis jedis) {
 				String seat = jedis.lindex("room", seatId);
+				//判断是否是redis room key被删除了
+				if(seat == null && seatId < 90) {
+					//如果确实不存在该key
+					if(!jedis.exists("room")) {
+						new RoomUtil().initLobby();//重新初始化大厅
+					}
+				}
 				JSONObject obj = JSONObject.fromObject(seat);
 				if(obj.getString("seatUser").equals(username)&&obj.getInt("id")==seatId) {
 					return seatId;
