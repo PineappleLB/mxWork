@@ -32,6 +32,7 @@ public class RedisSession {
 					//如果确实不存在该key
 					if(!jedis.exists("room")) {
 						new RoomUtil().initLobby();//重新初始化大厅
+						return getSeatsInfo(username, seatId);
 					}
 				}
 				JSONObject obj = JSONObject.fromObject(seat);

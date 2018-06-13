@@ -8,6 +8,7 @@ import model.Seat;
 import net.sf.json.JSONObject;
 import redis.clients.jedis.Jedis;
 import redisUtil.RedisUtil;
+import redisUtil.RoomUtil;
 import service.SeatService;
 import utils.Configs;
 import utils.RedisCallback;
@@ -24,6 +25,13 @@ public class SeatServiceImpl implements SeatService {
 			@Override
 			public Integer handle(Jedis jedis) {
 				String seatStr = jedis.lindex("room", seatId);
+				if(seatStr == null && seatId < 90) {
+					//如果确实不存在该key
+					if(!jedis.exists("room")) {
+						new RoomUtil().initLobby();//重新初始化大厅
+						return updateSeatsInfoForStaySeat(name, seatId);
+					}
+				}
 				obj = JSONObject.fromObject(seatStr);
 				if(obj.getInt("seatStatus")==1&&obj.getString("seatUser").equals(name)) {
 					obj.put("seatStatus", 2);
@@ -60,6 +68,13 @@ public class SeatServiceImpl implements SeatService {
 		//更新数据
 		temp.update( (jedis) -> {
 			List<String> list = jedis.lrange("room", 0, -1);
+			if(list == null && seatId < 90) {
+				//如果确实不存在该key
+				if(!jedis.exists("room")) {
+					new RoomUtil().initLobby();//重新初始化大厅
+					list = jedis.lrange("room", 0, -1);
+				}
+			}
 			JSONObject obj = null;
 			for (String string : list) {
 				obj = JSONObject.fromObject(string);
@@ -84,6 +99,13 @@ public class SeatServiceImpl implements SeatService {
 			@Override
 			public String handle(Jedis jedis) {
 				String seatStr = jedis.lindex("room", seatId);
+				if(seatStr == null && seatId < 90) {
+					//如果确实不存在该key
+					if(!jedis.exists("room")) {
+						new RoomUtil().initLobby();//重新初始化大厅
+						return handle(jedis);
+					}
+				}
 				return seatStr;
 			}
 		});
@@ -104,6 +126,15 @@ public class SeatServiceImpl implements SeatService {
 			public List<String> handle(Jedis jedis) {
 				int seatNum = Integer.parseInt(Configs.configProps.getProperty("seat.num"));
 				List<String> temp = jedis.lrange("room", seatNum*(room-1), seatNum*room-1);
+				
+				if(temp == null) {
+					//如果确实不存在该key
+					if(!jedis.exists("room")) {
+						new RoomUtil().initLobby();//重新初始化大厅
+						return handle(jedis);
+					}
+				}
+				
 				List<String> list = new ArrayList<>();
 				JSONObject obj = null;
 				for (String string : temp) {
@@ -135,7 +166,15 @@ public class SeatServiceImpl implements SeatService {
 		return temp.execute(new RedisCallback<Integer>() {
 			@Override
 			public Integer handle(Jedis redis) {
-				JSONObject obj = JSONObject.fromObject(redis.lindex("room", seatId));
+				String seatStr = redis.lindex("room", seatId);
+				if(seatStr == null && seatId < 90) {
+					//如果确实不存在该key
+					if(!redis.exists("room")) {
+						new RoomUtil().initLobby();//重新初始化大厅
+						return handle(redis);
+					}
+				}
+				JSONObject obj = JSONObject.fromObject(seatStr);
 				if(obj.getInt("seatStatus")==2) {
 					redis.lset("room", seatId, s.toString());//更新座位
 					return 1;
