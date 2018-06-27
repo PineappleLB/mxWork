@@ -20,7 +20,6 @@ import io.netty.handler.timeout.IdleStateEvent;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import redis.RedisSession;
-import serial.SerialPortSession;
 import service.RedisService;
 import service.UserService;
 import service.impl.RedisServiceImpl;
@@ -156,6 +155,7 @@ public class GameServerHandler extends SimpleChannelInboundHandler<String> {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		logger.info("客户端"+clientIP+"【userid:"+userId+"】"+"断开了游戏链接");
+		handler.getChannelHandlerContext().close();
 	}
 	
 	/**

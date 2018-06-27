@@ -48,10 +48,10 @@ public class TimeClient {
             ChannelFuture future = client.connect(host, port).sync();
             JSONObject arr = new JSONObject();
             
-        	arr.put("order", "regist");
+        	arr.put("order", "h");
         	arr.put("name", "test123");
-        	arr.put("pass", "123456");
-        	arr.put("beInvited", "YfI0ZO");
+        	arr.put("id", "100001");
+//        	arr.put("beInvited", "YfI0ZO");
 //        	arr.put("host", "118.112.108.229");
         	//[1-9][0-9]{0,2}(.[0-9]{0,3}){3}
         	System.out.println("开始写数据："+System.currentTimeMillis());
@@ -67,7 +67,7 @@ public class TimeClient {
 	
 	
     public static void main(String[] args) {
-        int port = 7896;
+        int port = 7888;
         TimeClient client = new TimeClient();
         try {
         	//111.230.238.141云服务器IP

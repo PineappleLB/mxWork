@@ -33,6 +33,10 @@ public class CountClientHandler extends  ChannelInboundHandlerAdapter{
 	private byte[] messageBytes;
 	
 	
+	public ChannelHandlerContext getChannelHandlerContext() {
+		return this.context;
+	}
+	
 	public int[] sendMessage(byte[] req, int id, int roomId, Integer seatId, int score) {
 		ByteBuf buf = Unpooled.buffer(req.length);
 		buf.writeBytes(req);
